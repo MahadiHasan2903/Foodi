@@ -15,6 +15,8 @@ const login = async (loginData) => {
     email: response.user.email,
     name: response.user.name,
     role: response.user.role,
+    avatar: response.user.avatar,
+    orders: response.user.orders,
     accessToken: response.token,
   };
 };

@@ -4,8 +4,8 @@ import { Inter } from "next/font/google";
 import { ToastContainer } from "react-toastify";
 import { ThemeProvider } from "@/lib/components/Theme/ThemeProvider";
 import AuthProvider from "@/lib/config/AuthProvider";
-import Header from "@/lib/components/Header/Header";
-import Footer from "@/lib/components/Footer";
+import Header from "@/lib/components/Layout/Header";
+import Footer from "@/lib/components/Layout/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
 

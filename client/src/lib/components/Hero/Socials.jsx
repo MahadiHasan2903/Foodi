@@ -2,14 +2,14 @@
 import React from "react";
 import {
   RiLinkedinFill,
-  RiGithubFill,
   RiFacebookFill,
   RiInstagramFill,
 } from "react-icons/ri";
+import { FaTwitter } from "react-icons/fa";
 
 const icons = [
   { path: "https://www.linkedin.com/in/mahadi2903", name: <RiLinkedinFill /> },
-  { path: "https://github.com/MahadiHasan2903", name: <RiGithubFill /> },
+  { path: "https://www.twitter.com", name: <FaTwitter /> },
   {
     path: "https://www.facebook.com/profile.php?id=100064028100652&mibextid=ZbWKwL",
     name: <RiFacebookFill />,

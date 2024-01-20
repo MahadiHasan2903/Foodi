@@ -27,8 +27,10 @@ export const authOptions = {
             id: loginData.id,
             email: loginData.email,
             name: loginData.name,
-            phoneNumber: loginData.phoneNumber,
             accessToken: loginData.accessToken,
+            phoneNumber: loginData.phoneNumber,
+            avatar: loginData.avatar,
+            orders: loginData.orders,
           };
 
           return user;

@@ -130,10 +130,12 @@ const loginController = async (req, res) => {
     });
 
     const userToSend = {
-      email: user.email,
-      name: user.name,
-      role: user.role,
       id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      avatar: user.avatar,
+      orders: user.orders,
     };
 
     res.status(200).json({
