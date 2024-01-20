@@ -33,31 +33,40 @@ const createFoodItemController = async (req, res) => {
 // Update a food item by ID
 const updateFoodItemController = async (req, res) => {
   try {
-    if (req.body.image) {
-      const existingFoodItem = await FoodItem.findById(req.params.id);
-      await cloudinary.uploader.destroy(existingFoodItem.image.public_id);
-
-      const myCloud = await cloudinary.uploader.upload(req.body.image, {
-        folder: "foodi-user-avatar",
+    const foodItem = await FoodItem.findById(req.params.id);
+    console.log(foodItem);
+    if (!foodItem) {
+      return res.status(404).json({
+        status: "fail",
+        message: "Food Item not found",
       });
+    } else {
+      if (req.body.image) {
+        const existingFoodItem = await FoodItem.findById(req.params.id);
+        await cloudinary.uploader.destroy(existingFoodItem.image.public_id);
 
-      req.body.image = {
-        public_id: myCloud.public_id,
-        url: myCloud.url,
-      };
+        const myCloud = await cloudinary.uploader.upload(req.body.image, {
+          folder: "foodi-user-avatar",
+        });
+
+        req.body.image = {
+          public_id: myCloud.public_id,
+          url: myCloud.url,
+        };
+      }
+
+      const updatedFoodItem = await FoodItem.findByIdAndUpdate(
+        req.params.id,
+        req.body,
+        { new: true }
+      );
+
+      res.status(200).json({
+        success: true,
+        message: "Food Item updated successfully",
+        updatedFoodItem,
+      });
     }
-
-    const updatedFoodItem = await FoodItem.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
-
-    res.status(200).json({
-      success: true,
-      message: "Food Item updated successfully",
-      updatedFoodItem,
-    });
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -70,15 +79,24 @@ const updateFoodItemController = async (req, res) => {
 // Delete a food item by ID
 const deleteFoodItemController = async (req, res) => {
   try {
-    const foodItemToDelete = await FoodItem.findById(req.params.id);
+    const foodItem = await FoodItem.findById(req.params.id);
+    console.log(foodItem);
+    if (!foodItem) {
+      return res.status(404).json({
+        status: "fail",
+        message: "Food Item not found",
+      });
+    } else {
+      const foodItemToDelete = await FoodItem.findById(req.params.id);
 
-    await cloudinary.uploader.destroy(foodItemToDelete.image.public_id);
-    await FoodItem.findByIdAndDelete(req.params.id);
+      await cloudinary.uploader.destroy(foodItemToDelete.image.public_id);
+      await FoodItem.findByIdAndDelete(req.params.id);
 
-    res.status(200).json({
-      success: true,
-      message: "Food item deleted successfully",
-    });
+      res.status(200).json({
+        success: true,
+        message: "Food item deleted successfully",
+      });
+    }
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -92,11 +110,20 @@ const deleteFoodItemController = async (req, res) => {
 const getSingleFoodItemController = async (req, res) => {
   try {
     const foodItem = await FoodItem.findById(req.params.id);
-    res.status(200).json({
-      success: true,
-      message: "Food item fetched successfully",
-      data: foodItem,
-    });
+    console.log(foodItem);
+    if (!foodItem) {
+      return res.status(404).json({
+        status: "fail",
+        message: "Food Item not found",
+      });
+    } else {
+      const foodItem = await FoodItem.findById(req.params.id);
+      res.status(200).json({
+        success: true,
+        message: "Food item fetched successfully",
+        data: foodItem,
+      });
+    }
   } catch (error) {
     res.status(500).json({
       success: false,

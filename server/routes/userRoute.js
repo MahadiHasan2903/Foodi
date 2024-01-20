@@ -20,20 +20,20 @@ const userRouter = express.Router();
 userRouter.post("/registration", registrationController);
 userRouter.post("/activate-user", activateUserController);
 userRouter.post("/login", loginController);
-userRouter.get("/get-user/:id", getSingleUserController);
 userRouter.delete(
   "/delete-user/:id",
   isAuthenticated,
   authorizeRoles("admin"),
   deleteUserController
 );
-userRouter.put(
-  "/update-user/:id",
+userRouter.put("/update-user/:id", isAuthenticated, updateUserController);
+userRouter.get(
+  "/users",
   isAuthenticated,
   authorizeRoles("admin"),
-  updateUserController
+  getAllUsersController
 );
-userRouter.get("/get-users", getAllUsersController);
+userRouter.get("/user/:id", isAuthenticated, getSingleUserController);
 // Get all orders info for chart
 userRouter.get(
   "/users-chart",

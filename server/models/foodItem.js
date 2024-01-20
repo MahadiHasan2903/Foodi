@@ -9,7 +9,7 @@ const foodItemSchema = new mongoose.Schema(
       public_id: { type: String },
       url: { type: String },
     },
-    sold: { type: Boolean, default: false },
+    sold: { type: String },
     category: { type: String, required: true },
     description: { type: String, required: true },
     ratings: [
