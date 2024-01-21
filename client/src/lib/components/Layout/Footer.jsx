@@ -7,7 +7,7 @@ import { Phone } from "lucide-react";
 const Footer = () => {
   return (
     <>
-      <section className="py-24 dark:bg-[#1d232a]">
+      {/* <section className="py-24 dark:bg-[#1d232a]">
         <div className="container mx-auto">
           <div className="flex flex-col items-center ">
             <h2 className="flex items-center max-w-xl mb-8 text-center h2">
@@ -24,7 +24,7 @@ const Footer = () => {
             </Link>
           </div>
         </div>
-      </section>
+      </section> */}
       <footer className="py-12 bg-[#2a3036] ">
         <div className="container mx-auto">
           <div className="flex flex-col items-center justify-between">

@@ -21,7 +21,7 @@ const login = async (loginData) => {
   };
 };
 
-const registrationResponse = async (registrationData) => {
+const registration = async (registrationData) => {
   const response = await fetchTyped(`${base_url}/registration`, {
     method: "POST",
     headers: {
@@ -30,16 +30,18 @@ const registrationResponse = async (registrationData) => {
     body: JSON.stringify(registrationData),
   });
 
-  if (!response.otp) {
+  if (!response.activationToken) {
     throw new Error("Registration Failed");
   }
 
   return {
+    message: response.message,
     activationToken: response.activationToken,
   };
 };
 
-const userActivationResponse = async (activationData) => {
+const userActivation = async (activationData) => {
+  console.log(activationData);
   const response = await fetchTyped(`${base_url}/activate-user`, {
     method: "POST",
     headers: {
@@ -63,8 +65,8 @@ const userActivationResponse = async (activationData) => {
 
 const authentication = {
   login,
-  registrationResponse,
-  userActivationResponse,
+  registration,
+  userActivation,
 };
 
 export default authentication;

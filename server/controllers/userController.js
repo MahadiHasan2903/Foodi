@@ -10,6 +10,7 @@ const { getMonthName } = require("../utils/getMonthName");
 const registrationController = async (req, res) => {
   try {
     const { name, email, password, role, phoneNumber, avatar } = req.body;
+    console.log(req.body);
 
     const existingUser = await User.findOne({ email });
 
@@ -19,9 +20,9 @@ const registrationController = async (req, res) => {
         message: "User already exists",
       });
     }
-    // const myCloud = await cloudinary.uploader.upload(avatar, {
-    //   folder: "foodi-user-avatar",
-    // });
+    const myCloud = await cloudinary.uploader.upload(avatar, {
+      folder: "foodi-user-avatar",
+    });
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = new User({
       name,
@@ -29,10 +30,10 @@ const registrationController = async (req, res) => {
       password: hashedPassword,
       role,
       phoneNumber,
-      // avatar: {
-      //   public_id: myCloud.public_id,
-      //   url: myCloud.secure_url,
-      // },
+      avatar: {
+        public_id: myCloud.public_id,
+        url: myCloud.secure_url,
+      },
     });
 
     const activationToken = createActivationToken(user);
@@ -57,6 +58,7 @@ const registrationController = async (req, res) => {
 const activateUserController = async (req, res, next) => {
   try {
     const { activation_token, activation_code } = req.body;
+    console.log(activation_token, activation_code);
     const { user, activationCode } = jwt.verify(
       activation_token,
       process.env.ACTIVATION_SECRET_KEY
@@ -77,9 +79,9 @@ const activateUserController = async (req, res, next) => {
       });
     }
 
-    // const myCloud = await cloudinary.uploader.upload(avatar, {
-    //   folder: "foodi-user-avatar",
-    // });
+    const myCloud = await cloudinary.uploader.upload(avatar, {
+      folder: "foodi-user-avatar",
+    });
 
     const newUser = await User.create({
       name,
@@ -87,10 +89,10 @@ const activateUserController = async (req, res, next) => {
       password,
       role,
       phoneNumber,
-      // avatar: {
-      //   public_id: myCloud.public_id,
-      //   url: myCloud.secure_url,
-      // },
+      avatar: {
+        public_id: myCloud.public_id,
+        url: myCloud.secure_url,
+      },
     });
 
     res.status(201).json({
@@ -284,10 +286,7 @@ const updateUserController = async (req, res) => {
 
 const getUserDataForChartController = async (req, res) => {
   try {
-    // Your logic to fetch user-related data for the chart
     const userData = await User.aggregate([
-      // Add your aggregation stages or queries based on your requirements
-      // For example, you might want to count users created per month
       {
         $group: {
           _id: {
