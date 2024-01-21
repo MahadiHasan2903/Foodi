@@ -56,12 +56,12 @@ const getSinglefoodItem = async (id, token) => {
   return foodItem;
 };
 
-const getAllfoodItems = async (token) => {
+const getAllfoodItems = async () => {
   const response = await fetchTyped(`${base_url}/foodItems`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+      // Authorization: `Bearer ${token}`,
     },
   });
 

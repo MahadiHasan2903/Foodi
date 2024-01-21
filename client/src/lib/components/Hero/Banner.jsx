@@ -44,7 +44,7 @@ const Banner = () => {
             Craftsmanship
           </p>
           <div className="flex flex-col mx-auto mb-12 gap-y-3 md:flex-row gap-x-3 xl:mx-0">
-            <Link href="/contact">
+            <Link href="/menu">
               <Button className="gap-x-2">
                 Order Now <ShoppingCart size={22} />
               </Button>

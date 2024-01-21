@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/lib/components/Theme/ThemeProvider";
 import AuthProvider from "@/lib/config/AuthProvider";
 import Header from "@/lib/components/Layout/Header";
 import Footer from "@/lib/components/Layout/Footer";
+import { CartProvider } from "@/lib/context/CartContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,23 +19,25 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <AuthProvider>
-          <ThemeProvider attribute="class" defaultTheme="dark">
-            <Header />
-            {children}
-            <ToastContainer
-              position="top-center"
-              autoClose={2000}
-              hideProgressBar={false}
-              newestOnTop={false}
-              closeOnClick
-              rtl={false}
-              draggable
-              theme="dark"
-            />
-            <Footer />
-          </ThemeProvider>
-        </AuthProvider>
+        <CartProvider>
+          <AuthProvider>
+            <ThemeProvider attribute="class" defaultTheme="dark">
+              <Header />
+              {children}
+              <ToastContainer
+                position="top-center"
+                autoClose={2000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                draggable
+                theme="dark"
+              />
+              <Footer />
+            </ThemeProvider>
+          </AuthProvider>
+        </CartProvider>
       </body>
     </html>
   );
