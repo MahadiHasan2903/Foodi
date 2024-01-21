@@ -10,7 +10,6 @@ const { getMonthName } = require("../utils/getMonthName");
 const registrationController = async (req, res) => {
   try {
     const { name, email, password, role, phoneNumber, avatar } = req.body;
-    console.log(req.body);
 
     const existingUser = await User.findOne({ email });
 
@@ -23,11 +22,10 @@ const registrationController = async (req, res) => {
     const myCloud = await cloudinary.uploader.upload(avatar, {
       folder: "foodi-user-avatar",
     });
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({
+    const registeredUser = new User({
       name,
       email,
-      password: hashedPassword,
+      password,
       role,
       phoneNumber,
       avatar: {
@@ -36,14 +34,15 @@ const registrationController = async (req, res) => {
       },
     });
 
-    const activationToken = createActivationToken(user);
+    const activationToken = createActivationToken(registeredUser);
 
-    await sendActivationEmail(user, activationToken);
+    await sendActivationEmail(registeredUser, activationToken);
 
     res.status(201).json({
       success: true,
-      message: `Please check your email: ${user.email} to activate your account`,
+      message: `Please check your email: ${registeredUser.email} to activate your account`,
       activationToken: activationToken.token,
+      registeredUser,
     });
   } catch (error) {
     console.error("Registration failed:", error);
@@ -57,8 +56,15 @@ const registrationController = async (req, res) => {
 // Activate User Controller
 const activateUserController = async (req, res, next) => {
   try {
-    const { activation_token, activation_code } = req.body;
-    console.log(activation_token, activation_code);
+    const { activation_token, activation_code, registeredUser } = req.body;
+    // console.log(
+    //   "Activation Token",
+    //   activation_token,
+    //   "Activation Code",
+    //   activation_code,
+    //   "Registered User:",
+    //   registeredUser
+    // );
     const { user, activationCode } = jwt.verify(
       activation_token,
       process.env.ACTIVATION_SECRET_KEY
@@ -69,8 +75,12 @@ const activateUserController = async (req, res, next) => {
         message: "Invalid Activation Code",
       });
     }
-    const { name, email, password, role, phoneNumber, avatar } = user;
-    const existingUser = await User.findOne({ email });
+
+    const hashedPassword = await bcrypt.hash(registeredUser.password, 10);
+
+    // Check if the email already exists in the database
+    const existingEmail = registeredUser.email;
+    const existingUser = await User.findOne({ email: existingEmail });
 
     if (existingUser) {
       return res.status(400).json({
@@ -78,22 +88,17 @@ const activateUserController = async (req, res, next) => {
         message: "Email already exists",
       });
     }
-
-    const myCloud = await cloudinary.uploader.upload(avatar, {
-      folder: "foodi-user-avatar",
+    // Save the user information with the hashed password
+    const newUser = new User({
+      name: registeredUser.name,
+      email: existingEmail,
+      password: hashedPassword,
+      role: registeredUser.role,
+      phoneNumber: registeredUser.phoneNumber,
+      avatar: registeredUser.avatar,
     });
 
-    const newUser = await User.create({
-      name,
-      email,
-      password,
-      role,
-      phoneNumber,
-      avatar: {
-        public_id: myCloud.public_id,
-        url: myCloud.secure_url,
-      },
-    });
+    await newUser.save();
 
     res.status(201).json({
       success: true,
@@ -114,6 +119,7 @@ const activateUserController = async (req, res, next) => {
 const loginController = async (req, res) => {
   try {
     const { email, password } = req.body;
+    console.log(email, password);
 
     const user = await User.findOne({ email });
 
@@ -135,6 +141,7 @@ const loginController = async (req, res) => {
       id: user._id,
       name: user.name,
       email: user.email,
+      phoneNumber: user.phoneNumber,
       role: user.role,
       avatar: user.avatar,
       orders: user.orders,

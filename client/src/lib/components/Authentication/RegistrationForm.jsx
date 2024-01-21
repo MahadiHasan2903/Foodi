@@ -32,6 +32,7 @@ const RegistrationForm = () => {
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [activationToken, setActivationToken] = useState("");
+  const [registeredUser, setRegisteredUser] = useState("");
 
   const router = useRouter();
 
@@ -54,14 +55,14 @@ const RegistrationForm = () => {
       const registrationData = {
         name,
         email,
-        phone,
+        phoneNumber: phone,
         password,
         avatar,
       };
       const response = await api.auth.registration(registrationData);
-      console.log("Registration Response:", response);
       toast.success(response.message);
       setActivationToken(response.activationToken);
+      setRegisteredUser(response.registeredUser);
     } catch (error) {
       console.log("Registration Error:", error);
     } finally {
@@ -72,7 +73,10 @@ const RegistrationForm = () => {
   return (
     <>
       {activationToken !== "" ? (
-        <VerificationForm activation_token={activationToken} />
+        <VerificationForm
+          activation_token={activationToken}
+          registeredUser={registeredUser}
+        />
       ) : (
         <div className="relative flex items-center justify-center p-4 my-10">
           <Card className="relative w-[900%] md:w-[50%] lg:w-[25%] overflow-hidden group dark:bg-[#2a3036]">

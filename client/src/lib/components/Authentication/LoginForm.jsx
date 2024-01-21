@@ -10,14 +10,40 @@ import { Card, CardHeader } from "../ui/card";
 import { Button } from "../ui/button";
 import logo from "../../../../public/logo.png";
 import Image from "next/image";
+import { signIn } from "next-auth/react";
+import { toast } from "react-toastify";
+import { HashLoader } from "react-spinners";
 
 const LoginForm = () => {
+  const router = useRouter();
   const [visible, setVisible] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = () => {};
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const loginData = {
+      email,
+      password,
+    };
+    try {
+      setLoading(true);
+      const response = await signIn("credentials", {
+        ...loginData,
+        redirect: false,
+      });
+      toast.success("Login Successful");
+      console.log(response);
+      router.push("/");
+    } catch (error) {
+      console.error("Sign in failed:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="flex items-center justify-center p-4 my-[100px] ">
       <Card className="relative w-[80%] md:w-[50%] lg:w-[25%] overflow-hidden group dark:bg-[#2a3036]">
@@ -66,8 +92,14 @@ const LoginForm = () => {
             )}
           </div>
           <div className="flex items-center justify-center py-10">
-            <Button className="gap-x-2">
-              Login <LogIn size={22} />
+            <Button className="gap-x-2" disabled={loading}>
+              {loading ? (
+                <HashLoader size={35} />
+              ) : (
+                <>
+                  Login <LogIn size={22} />
+                </>
+              )}
             </Button>
           </div>
 

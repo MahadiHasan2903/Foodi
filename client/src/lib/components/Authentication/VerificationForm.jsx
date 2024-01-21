@@ -10,8 +10,10 @@ import api from "@/lib/api";
 import { toast } from "react-toastify";
 import { Input } from "../ui/input";
 import { MdOutlineVerifiedUser } from "react-icons/md";
+import { useRouter } from "next/navigation";
 
-const VerificationForm = ({ activation_token }) => {
+const VerificationForm = ({ activation_token, registeredUser }) => {
+  const router = useRouter();
   const [invalidError, setInvalidError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [activationCode, setActivationCode] = useState(Array(6).fill(""));
@@ -45,11 +47,13 @@ const VerificationForm = ({ activation_token }) => {
       }
 
       const activationData = {
+        registeredUser,
         activation_token,
         activation_code: activationCode.join(""),
       };
 
       const response = await api.auth.userActivation(activationData);
+      console.log(response);
       toast.success(response.message);
       router.push("/login");
     } catch (error) {

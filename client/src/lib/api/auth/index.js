@@ -11,6 +11,7 @@ const login = async (loginData) => {
   });
 
   return {
+    message: response.message,
     id: response.user.id,
     email: response.user.email,
     name: response.user.name,
@@ -37,6 +38,7 @@ const registration = async (registrationData) => {
   return {
     message: response.message,
     activationToken: response.activationToken,
+    registeredUser: response.registeredUser,
   };
 };
 
@@ -50,11 +52,13 @@ const userActivation = async (activationData) => {
     body: JSON.stringify(activationData),
   });
 
-  if (!response.otp) {
+  if (!response.user) {
     throw new Error("Registration Failed");
   }
+  console.log(response);
 
   return {
+    message: response.message,
     id: response.user.id,
     email: response.user.email,
     name: response.user.name,

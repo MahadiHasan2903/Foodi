@@ -32,6 +32,7 @@ export const authOptions = {
             avatar: loginData.avatar,
             orders: loginData.orders,
           };
+          // console.log("Logged in User:", user);
 
           return user;
         } catch (error) {
@@ -47,12 +48,7 @@ export const authOptions = {
       return { ...token, ...user };
     },
     session: ({ session, token }) => {
-      const modifiedSession = {
-        ...session,
-        user: token.user,
-      };
-
-      return modifiedSession;
+      return (session = token);
     },
   },
 };
