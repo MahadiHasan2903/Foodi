@@ -155,13 +155,18 @@ const getAllFoodItemsController = async (req, res) => {
 const getFoodItemsDataForChartController = async (req, res) => {
   try {
     const currentDate = new Date();
-    const last12Months = new Date(currentDate);
-    last12Months.setMonth(currentDate.getMonth() - 11);
+    const last12Months = Array.from({ length: 12 }, (_, i) => {
+      const month = currentDate.getMonth() - i;
+      const year = currentDate.getFullYear() - (month < 0 ? 1 : 0);
+      return { month: (month + 12) % 12, year };
+    });
 
     const foodItemsData = await FoodItem.aggregate([
       {
         $match: {
-          createdAt: { $gte: last12Months },
+          createdAt: {
+            $gte: new Date(last12Months[11].year, last12Months[11].month, 1),
+          },
         },
       },
       {
@@ -181,25 +186,32 @@ const getFoodItemsDataForChartController = async (req, res) => {
       },
     ]);
 
-    const xAxis = foodItemsData.map((item) => ({
-      data: [`${getMonthName(item._id.month)} ${item._id.year}`],
+    const xAxis = last12Months.map((item) => ({
+      data: [`${getMonthName(item.month + 1)} ${item.year}`],
     }));
 
     const series = [
       {
-        data: foodItemsData.map((item) => item.count),
+        data: last12Months.map((item) => {
+          const match = foodItemsData.find(
+            (data) =>
+              data._id.year === item.year && data._id.month === item.month + 1
+          );
+          return match ? match.count : 0;
+        }),
       },
     ];
 
     res.status(200).json({
       success: true,
-      message: "Data for chart fetched successfully",
+      message: "Food items data for chart fetched successfully",
       data: { xAxis, series },
     });
   } catch (error) {
+    console.error("Error fetching food items data for chart:", error);
     res.status(500).json({
       success: false,
-      message: "Error while fetching data for chart",
+      message: "Failed to fetch food items data for chart",
       error: error.message,
     });
   }

@@ -107,6 +107,38 @@ const getOrdersData = async (token) => {
   return chartDetails;
 };
 
+const getFoodItemsInOrder = async (id, token) => {
+  const response = await fetchTyped(`${base_url}/order-item/${id}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (!response.data) {
+    throw new Error(response.message);
+  }
+
+  const FoodItemsInOrder = response.data;
+  return FoodItemsInOrder;
+};
+
+const getUserOrder = async (id, token) => {
+  const response = await fetchTyped(`${base_url}/user-order/${id}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (!response.data) {
+    throw new Error(response.message);
+  }
+
+  const userOrders = response.data;
+  return userOrders;
+};
+
 const orders = {
   createOrder,
   deleteOrder,
@@ -114,6 +146,8 @@ const orders = {
   getSingleOrder,
   getAllOrders,
   getOrdersData,
+  getFoodItemsInOrder,
+  getUserOrder,
 };
 
 export default orders;

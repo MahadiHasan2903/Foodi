@@ -27,6 +27,7 @@ export const authOptions = {
             id: loginData.id,
             email: loginData.email,
             name: loginData.name,
+            role: loginData.role,
             accessToken: loginData.accessToken,
             phoneNumber: loginData.phoneNumber,
             avatar: loginData.avatar,

@@ -6,7 +6,9 @@ const {
   getSingleOrderController,
   getAllOrdersController,
   getOrdersDataForChartController,
-} = require("../controllers/OrderController");
+  getFoodItemsInOrderController,
+  getUserOrdersController,
+} = require("../controllers/orderController");
 
 const {
   isAuthenticated,
@@ -51,6 +53,19 @@ orderRouter.get(
   isAuthenticated,
   authorizeRoles("admin"),
   getOrdersDataForChartController
+);
+
+// Get all orders info for chart
+orderRouter.get(
+  "/order-item/:id",
+  isAuthenticated,
+  getFoodItemsInOrderController
+);
+
+orderRouter.get(
+  "/user-order/:id",
+  isAuthenticated,
+  getFoodItemsInOrderController
 );
 
 module.exports = orderRouter;

@@ -22,18 +22,23 @@ const FoodCard = ({ foodItem }) => {
     events,
     image,
   } = foodItem;
-  const [isHeartFilled, setIsHeartFilled] = useState(false);
+  // const [isHeartFilled, setIsHeartFilled] = useState(false);
 
-  const { addToCart } = useCart();
+  const { addToCart, cartItems } = useCart();
+  const isItemInCart = cartItems.some((item) => item.id === id);
 
   const handleAddToCart = () => {
-    addToCart(foodItem);
-    toast.success("Item added to cart");
+    if (isItemInCart) {
+      toast.error("Item is already in the cart");
+    } else {
+      addToCart(foodItem);
+      toast.success("Item added to cart");
+    }
   };
 
-  const handleHeartClick = () => {
-    setIsHeartFilled(!isHeartFilled);
-  };
+  // const handleHeartClick = () => {
+  //   setIsHeartFilled(!isHeartFilled);
+  // };
 
   const averageRating =
     ratings.reduce((sum, ratingObj) => sum + ratingObj.ratings, 0) /

@@ -293,7 +293,21 @@ const updateUserController = async (req, res) => {
 
 const getUserDataForChartController = async (req, res) => {
   try {
+    const currentDate = new Date();
+    const last12Months = Array.from({ length: 12 }, (_, i) => {
+      const month = currentDate.getMonth() - i;
+      const year = currentDate.getFullYear() - (month < 0 ? 1 : 0);
+      return { month: (month + 12) % 12, year };
+    });
+
     const userData = await User.aggregate([
+      {
+        $match: {
+          createdAt: {
+            $gte: new Date(last12Months[11].year, last12Months[11].month, 1),
+          },
+        },
+      },
       {
         $group: {
           _id: {
@@ -311,13 +325,19 @@ const getUserDataForChartController = async (req, res) => {
       },
     ]);
 
-    const xAxis = userData.map((item) => ({
-      data: [`${getMonthName(item._id.month)} ${item._id.year}`],
+    const xAxis = last12Months.map((item) => ({
+      data: [`${getMonthName(item.month + 1)} ${item.year}`],
     }));
 
     const series = [
       {
-        data: userData.map((item) => item.count),
+        data: last12Months.map((item) => {
+          const match = userData.find(
+            (data) =>
+              data._id.year === item.year && data._id.month === item.month + 1
+          );
+          return match ? match.count : 0;
+        }),
       },
     ];
 
@@ -335,6 +355,8 @@ const getUserDataForChartController = async (req, res) => {
     });
   }
 };
+
+// ... (rest of the code remains unchanged)
 
 module.exports = {
   registrationController,

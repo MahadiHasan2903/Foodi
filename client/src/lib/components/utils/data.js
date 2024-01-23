@@ -1,3 +1,11 @@
+import {
+  PackagePlus,
+  LayoutDashboard,
+  ListChecks,
+  SquarePen,
+  Users,
+} from "lucide-react";
+
 export const reviewsData = [
   {
     avatar: "/images/reviews/avatar-1.png",
@@ -40,5 +48,40 @@ export const reviewsData = [
     review:
       "Incredible! Flavor-packed joy. Lightning-fast delivery. A culinary masterpiece brought to my door. Wow!",
     rating: 5,
+  },
+];
+
+export const sidebarItems = [
+  {
+    id: 1,
+    title: "Dashboard",
+    path: "/dashboard",
+    icon: <LayoutDashboard size={20} />,
+  },
+  {
+    id: 2,
+    title: "All Food Items",
+    path: "/all-foodItems",
+    icon: <ListChecks size={20} />,
+  },
+  {
+    id: 3,
+    title: "Add Food Items",
+    path: "/add-foodItems",
+    icon: <SquarePen size={20} />,
+  },
+
+  {
+    id: 4,
+    title: "All Users",
+    path: "/all-users",
+    icon: <Users size={20} />,
+  },
+
+  {
+    id: 5,
+    title: "All Orders",
+    path: "/all-skills",
+    icon: <PackagePlus size={20} />,
   },
 ];
