@@ -14,7 +14,6 @@ const SpecialDishes = () => {
     const fetchMostSoldItems = async () => {
       try {
         const foodItems = await api.foodItems.getAllfoodItems();
-        console.log("All foodItems:", foodItems);
 
         // Sort foodItems based on the 'sold' property in descending order
         const sortedFoodItems = foodItems.sort(

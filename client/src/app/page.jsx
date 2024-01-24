@@ -7,7 +7,7 @@ import SpecialDishes from "@/lib/components/Home/SpecialDishes";
 
 const Home = async () => {
   return (
-    <div>
+    <div className="relative">
       <Banner />
       <Categories />
       <SpecialDishes />

@@ -10,9 +10,9 @@ const Navbar = ({ containerStyles, linkStyles, underlineStyles }) => {
   const { data: session } = useSession();
   const accessToken = session?.accessToken;
   const userRole = session?.role;
-  const avatar = session?.avatar.url;
+  const avatar = session?.avatar?.url;
   // console.log("Token:", accessToken);
-  console.log("User Role:", userRole);
+  // console.log("User Role:", userRole);
   const links = [
     { path: "/", name: "Home" },
     { path: "/menu", name: "Menu" },

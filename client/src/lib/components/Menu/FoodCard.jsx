@@ -22,16 +22,17 @@ const FoodCard = ({ foodItem }) => {
     events,
     image,
   } = foodItem;
-  // const [isHeartFilled, setIsHeartFilled] = useState(false);
 
   const { addToCart, cartItems } = useCart();
   const isItemInCart = cartItems.some((item) => item.id === id);
 
   const handleAddToCart = () => {
+    const quantity = 1;
+
     if (isItemInCart) {
       toast.error("Item is already in the cart");
     } else {
-      addToCart(foodItem);
+      addToCart(foodItem, quantity);
       toast.success("Item added to cart");
     }
   };

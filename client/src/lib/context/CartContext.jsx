@@ -1,32 +1,55 @@
 "use client";
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 const CartContext = createContext();
 
+export const useCart = () => {
+  return useContext(CartContext);
+};
+
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const getStoredCartItems = () => {
-      const storedCartItems = localStorage.getItem("cartItems");
-      return storedCartItems ? JSON.parse(storedCartItems) : [];
-    };
-
-    setCartItems(getStoredCartItems());
-  }, []); // Run only on mount
+    const storedCartItems = localStorage.getItem("cartItems");
+    setCartItems(storedCartItems ? JSON.parse(storedCartItems) : []);
+    setLoading(false);
+  }, []);
 
   useEffect(() => {
-    localStorage.setItem("cartItems", JSON.stringify(cartItems));
-  }, [cartItems]);
+    if (!loading) {
+      localStorage.setItem("cartItems", JSON.stringify(cartItems));
+    }
+  }, [cartItems, loading]);
 
-  const addToCart = (item) => {
-    setCartItems((prevCartItems) => [...prevCartItems, item]);
+  const addToCart = (foodItem, quantity) => {
+    if (quantity <= 0) {
+      return;
+    }
+
+    const existingItem = cartItems.find((item) => item.id === foodItem.id);
+
+    if (existingItem) {
+      const updatedCart = cartItems.map((item) =>
+        item.id === foodItem.id
+          ? { ...item, quantity: item.quantity + quantity }
+          : item
+      );
+      setCartItems(updatedCart);
+    } else {
+      setCartItems([...cartItems, { ...foodItem, quantity }]);
+    }
   };
 
-  const deleteFromCart = (itemId) => {
-    setCartItems((prevCartItems) =>
-      prevCartItems.filter((item) => item.id !== itemId)
-    );
+  const removeFromCart = (itemId) => {
+    const updatedCart = cartItems.filter((item) => item.id !== itemId);
+    setCartItems(updatedCart);
+  };
+
+  const getCartItems = () => {
+    return cartItems;
   };
 
   const clearCart = () => {
@@ -35,13 +58,15 @@ export const CartProvider = ({ children }) => {
 
   return (
     <CartContext.Provider
-      value={{ cartItems, addToCart, deleteFromCart, clearCart }}
+      value={{
+        cartItems,
+        addToCart,
+        removeFromCart,
+        getCartItems,
+        clearCart,
+      }}
     >
       {children}
     </CartContext.Provider>
   );
-};
-
-export const useCart = () => {
-  return useContext(CartContext);
 };
