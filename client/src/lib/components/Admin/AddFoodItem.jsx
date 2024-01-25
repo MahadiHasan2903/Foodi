@@ -44,7 +44,12 @@ const AddFoodItem = () => {
   };
 
   const handleAddItem = async () => {
-    setLoading(true); // Set loading to true when the form is being submitted
+    if (!image || !name || !description || !originalPrice || !category) {
+      setLoading(false);
+      toast.error("Please fill in all the required fields");
+      return;
+    }
+    setLoading(true);
 
     const foodItemData = {
       image,
@@ -60,7 +65,11 @@ const AddFoodItem = () => {
         foodItemData
       );
       console.log(response);
-      toast.success(response.message);
+      if (!response.newFoodItem) {
+        toast.error(response.message);
+      } else {
+        toast.success(response.message);
+      }
       setImage(null);
       setName("");
       setDescription("");
