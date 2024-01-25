@@ -66,8 +66,8 @@ export const sidebarItems = [
   },
   {
     id: 3,
-    title: "Add Food Items",
-    path: "/add-foodItems",
+    title: "Add Food Item",
+    path: "/add-foodItem",
     icon: <SquarePen size={20} />,
   },
 
@@ -81,7 +81,7 @@ export const sidebarItems = [
   {
     id: 5,
     title: "All Orders",
-    path: "/all-skills",
+    path: "/all-orders",
     icon: <PackagePlus size={20} />,
   },
 ];

@@ -28,7 +28,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="flex flex-col mx-5 md:p-2">
+    <div className="flex flex-col mx-5 md:p-2 h-[75vh]">
       {sidebarItems?.map((item) => {
         const isSelected = selectedItem === item.id;
         const isActive = activeItem === item.id;

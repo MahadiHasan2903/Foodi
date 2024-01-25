@@ -46,26 +46,28 @@ const FoodCard = ({ foodItem }) => {
     ratings.length;
 
   return (
-    <Card className="relative overflow-hidden group dark:bg-[#1d232a]">
+    <Card className="relative overflow-hidden group bg-[#d7d7d7] dark:bg-[#1d232a]">
       <CardHeader className="p-0">
-        <div className="relative w-full h-[260px] flex items-center overflow-hidden xl:bg-no-repeat bg-tertiary dark:bg-secondary/40  xl:bg-[110%] justify-center">
+        <div className="w-2/6 ">
+          <Badge className="m-2 mb-3 text-sm font-medium text-center uppercase top-4 left-5">
+            {category}
+          </Badge>
+        </div>
+        <div className="relative w-full h-[260px] flex items-center mt-2 overflow-hidden xl:bg-no-repeat bg-tertiary dark:bg-secondary/40  xl:bg-[110%] justify-center">
           <Image
             className="absolute bottom-0 shadow-2xl"
             src={image.url}
             width={300}
-            height={300}
+            height={250}
             alt="Project"
             priortiy="true"
           />
         </div>
       </CardHeader>
       <div className="h-full px-8 py-6">
-        <Badge className="absolute mb-3 text-sm font-medium uppercase top-4 left-5">
-          {category}
-        </Badge>
-        <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center justify-between mb-1">
           <h4 className="h4">{name}</h4>
-          <div className="flex items-center justify-center gap-2 mb-3">
+          <div className="flex items-center justify-center gap-2 mb-1">
             <FaStar className="text-yellow-400" />{" "}
             <span className="font-medium">{averageRating}</span>{" "}
           </div>

@@ -60,7 +60,7 @@ const OurServices = () => {
             {serviceLists.map((service) => (
               <div
                 key={service.id}
-                className="px-4 dark:bg-[#1d232a] py-5 space-y-2 text-center transition-all duration-200 rounded-sm shadow-md cursor-pointer text-green hover:border hover:border-indigo-600"
+                className="px-4 bg-[#d7d7d7] dark:bg-[#1d232a] py-5 space-y-2 text-center transition-all duration-200 rounded-sm shadow-md cursor-pointer text-green hover:border hover:border-indigo-600"
               >
                 <Image
                   src={service.img}
@@ -70,7 +70,7 @@ const OurServices = () => {
                   height={60}
                 />
                 <h5 className="pt-3 font-semibold"> {service.title}</h5>
-                <p className="text-[#90BD95]">{service.des}</p>
+                <p className="dark:text-[#90BD95] text-black">{service.des}</p>
               </div>
             ))}
           </div>

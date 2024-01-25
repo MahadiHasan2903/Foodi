@@ -11,7 +11,14 @@ const createfoodItem = async (token, foodItemData) => {
     body: JSON.stringify(foodItemData),
   });
 
-  return response.message;
+  if (response.newFoodItem) {
+    return response;
+  }
+  const foodItem = {
+    newFoodItem: response.newFoodItem,
+    message: response.message,
+  };
+  return foodItem;
 };
 
 const deletefoodItem = async (id, token) => {

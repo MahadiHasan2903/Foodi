@@ -47,7 +47,7 @@ const Categories = () => {
           <Link href="/menu">
             <div
               key={i}
-              className="z-10 px-5 py-6 mx-auto text-center transition-all duration-300 dark:bg-[#1d232a] rounded-md shadow-lg cursor-pointer w-72 hover:-translate-y-4"
+              className="z-10 px-5 py-6 mx-auto text-center transition-all duration-300 bg-[#d7d7d7] dark:bg-[#1d232a] rounded-md shadow-lg cursor-pointer w-72 hover:-translate-y-4"
             >
               <div className="flex items-center justify-center w-full mx-auto">
                 <Image
