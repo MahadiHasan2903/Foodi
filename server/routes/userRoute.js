@@ -7,6 +7,7 @@ const {
   getSingleUserController,
   deleteUserController,
   updateUserController,
+  changePasswordController,
   getUserDataForChartController,
 } = require("../controllers/userController");
 
@@ -20,6 +21,7 @@ const userRouter = express.Router();
 userRouter.post("/registration", registrationController);
 userRouter.post("/activate-user", activateUserController);
 userRouter.post("/login", loginController);
+userRouter.post("/change-password/:id", changePasswordController);
 userRouter.delete(
   "/delete-user/:id",
   isAuthenticated,

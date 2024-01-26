@@ -53,17 +53,6 @@ const Sidebar = () => {
           </Link>
         );
       })}
-      <p
-        className="flex items-center my-4 ml-2 text-[20px] rounded-lg  border-b hover:bg-primary hover:text-white cursor-pointer"
-        onClick={() => {
-          signOut({ callbackUrl: "/" });
-        }}
-      >
-        <span>
-          <LogOut />
-        </span>
-        <span className="hidden ml-2 md:block">Logout</span>
-      </p>
     </div>
   );
 };

@@ -61,27 +61,27 @@ export const sidebarItems = [
   {
     id: 2,
     title: "All Food Items",
-    path: "/all-foodItems",
+    path: "/foodItems",
     icon: <ListChecks size={20} />,
-  },
-  {
-    id: 3,
-    title: "Add Food Item",
-    path: "/add-foodItem",
-    icon: <SquarePen size={20} />,
   },
 
   {
-    id: 4,
+    id: 3,
     title: "All Users",
-    path: "/all-users",
+    path: "/users",
     icon: <Users size={20} />,
   },
 
   {
-    id: 5,
+    id: 4,
     title: "All Orders",
-    path: "/all-orders",
+    path: "/orders",
     icon: <PackagePlus size={20} />,
+  },
+  {
+    id: 5,
+    title: "Add Food Item",
+    path: "/add-foodItem",
+    icon: <SquarePen size={20} />,
   },
 ];

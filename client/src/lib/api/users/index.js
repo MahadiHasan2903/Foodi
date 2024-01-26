@@ -79,8 +79,21 @@ const getUsersData = async (token) => {
   }
   return response.data;
 };
+
+const changePassword = async (id, token) => {
+  const response = await fetchTyped(`${base_url}/change-password/${id}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.message;
+};
 const users = {
   getSingleUser,
+  changePassword,
   getAllUsers,
   deleteUser,
   updateUser,

@@ -2,15 +2,6 @@
 import React, { useState } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectGroup,
-  SelectLabel,
-  SelectItem,
-  SelectContent,
-} from "@/components/ui/select";
 import { Camera } from "lucide-react";
 import Image from "next/image";
 import { Textarea } from "../ui/textarea";

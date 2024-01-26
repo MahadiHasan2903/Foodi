@@ -5,18 +5,20 @@ import React, { useState } from "react";
 
 const SingleCart = ({ item, quantityChangeHandler, handleRemoveFromCart }) => {
   const [value, setValue] = useState(item?.quantity);
+
   const totalPrice = item?.discountPrice * value;
-  //   console.log("Food Item:", item);
 
   const increment = () => {
-    setValue((prevValue) => prevValue + 1);
-    quantityChangeHandler(item.id, value + 1);
+    const newValue = value + 1;
+    setValue(newValue);
+    quantityChangeHandler(item.id, newValue);
   };
 
   const decrement = () => {
     if (value > 1) {
-      setValue((prevValue) => prevValue - 1);
-      quantityChangeHandler(item.id, value - 1);
+      const newValue = value - 1;
+      setValue(newValue);
+      quantityChangeHandler(item.id, newValue);
     }
   };
 

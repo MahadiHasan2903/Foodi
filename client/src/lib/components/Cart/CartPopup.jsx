@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { X, ShoppingBag } from "lucide-react";
 import { useCart } from "@/lib/context/CartContext";
 import SingleCart from "./SingleCart";
+import Link from "next/link";
 
 const CartPopup = ({ onClose }) => {
   const [isPopupOpen, setPopupOpen] = useState(true);
@@ -18,6 +19,10 @@ const CartPopup = ({ onClose }) => {
   const handleRemoveFromCart = (itemId) => {
     removeFromCart(itemId);
   };
+
+  const totalPrice = cartItems.reduce((acc, item) => {
+    return acc + item.originalPrice * item.quantity;
+  }, 0);
 
   const quantityChangeHandler = (itemId, newQuantity) => {};
 
@@ -47,6 +52,9 @@ const CartPopup = ({ onClose }) => {
                   />
                 ))}
             </div>
+          </div>
+          <div className="bottom-0 py-2 mx-4 mt-[200px] text-center rounded-lg bg-primary">
+            <Link href="/checkout">Checkout Now (BDT {totalPrice})</Link>
           </div>
         </div>
       )}

@@ -291,6 +291,54 @@ const updateUserController = async (req, res) => {
   }
 };
 
+//Change password
+const changePasswordController = async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+    const { oldPassword, newPassword } = req.body;
+
+    // Fetch the user
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    // Check if the old password is correct
+    const isValidOldPassword = await bcrypt.compare(oldPassword, user.password);
+
+    if (!isValidOldPassword) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid old password",
+      });
+    }
+
+    // Hash the new password
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update the user's password in the database
+    user.password = hashedNewPassword;
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Password changed successfully",
+    });
+  } catch (error) {
+    console.error("Error changing password:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to change password",
+      error: error.message,
+    });
+  }
+};
+
 const getUserDataForChartController = async (req, res) => {
   try {
     const currentDate = new Date();
@@ -366,5 +414,6 @@ module.exports = {
   deleteUserController,
   updateUserController,
   activateUserController,
+  changePasswordController,
   getUserDataForChartController,
 };

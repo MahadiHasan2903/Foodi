@@ -17,12 +17,21 @@ const ContactForm = () => {
   const [email, setEmail] = useState("");
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
-  const handleSubmit = () => {
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!name || !email || !subject || !message) {
+      toast.error("Please fill out all fields");
+      return;
+    }
+
     setName("");
     setEmail("");
     setSubject("");
+    setMessage("");
     toast.success("Message sent successfully");
   };
+
   return (
     <form
       className="flex flex-col gap-y-4"
@@ -68,7 +77,12 @@ const ContactForm = () => {
         />
         <MessageSquare className="absolute top-4 right-6" size={20} />
       </div>
-      <Button type="submit" className="flex gap-x-1 items-center max-w-[166px]">
+
+      <Button
+        className="flex gap-x-1 items-center max-w-[166px]"
+        type="submit"
+        onClick={handleSubmit}
+      >
         Send
         <ArrowRightIcon size={20} />
       </Button>

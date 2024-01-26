@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 
 const Navbar = ({ containerStyles, linkStyles, underlineStyles }) => {
@@ -11,20 +11,26 @@ const Navbar = ({ containerStyles, linkStyles, underlineStyles }) => {
   const accessToken = session?.accessToken;
   const userRole = session?.role;
   const avatar = session?.avatar?.url;
-  // console.log("Token:", accessToken);
-  // console.log("User Role:", userRole);
+
   const links = [
     { path: "/", name: "Home" },
     { path: "/menu", name: "Menu" },
     { path: "/contact", name: "Contact" },
     userRole === "admin"
-      ? { path: "/dashboard", name: "dashboard" }
-      : { path: "/login", name: "login" },
-    {
-      path: accessToken ? "/profile" : "",
-      name: accessToken ? "Avatar" : "",
-    },
+      ? { path: "/dashboard", name: "Dashboard" }
+      : { path: "/login", name: "Login" },
   ];
+
+  const [isDropdownOpen, setDropdownOpen] = useState(false);
+
+  const handleAvatarClick = () => {
+    setDropdownOpen(!isDropdownOpen);
+  };
+
+  const handleLogout = () => {
+    // Add logic to handle logout
+    // You might want to call a logout function or redirect the user to the logout page
+  };
 
   return (
     <nav className={`${containerStyles}`}>
@@ -43,20 +49,36 @@ const Navbar = ({ containerStyles, linkStyles, underlineStyles }) => {
               className={`${underlineStyles}`}
             />
           )}
-
-          {link.name === "Avatar" && accessToken ? (
-            <Image
-              src={avatar}
-              alt="Avatar"
-              width={40}
-              height={40}
-              className="overflow-hidden rounded-full"
-            />
-          ) : (
-            link.name
-          )}
+          {link.name}
         </Link>
       ))}
+      {accessToken && (
+        <div style={{ position: "relative" }}>
+          <Image
+            src={avatar}
+            alt="avatar"
+            width={50}
+            height={50}
+            className="rounded-full cursor-pointer"
+            onClick={handleAvatarClick}
+          />
+          {isDropdownOpen && (
+            <div className="absolute  left-[-50px] bg-[#d7d7d7] dark:bg-[#1d232a] z-50 px-2 py-2">
+              <div className="px-12 py-2 mb-1 text-center rounded-lg bg-primary">
+                <Link href="/profile">Profile</Link>
+              </div>
+              <div
+                className="px-12 py-2 text-center rounded-lg bg-primary"
+                onClick={() => {
+                  signOut({ callbackUrl: "/" });
+                }}
+              >
+                Logout
+              </div>
+            </div>
+          )}
+        </div>
+      )}
     </nav>
   );
 };
