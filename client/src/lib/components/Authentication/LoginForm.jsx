@@ -34,7 +34,11 @@ const LoginForm = () => {
         ...loginData,
         redirect: false,
       });
-      toast.success("Login Successful");
+      if (response.status !== 200) {
+        toast.error("Invalid Credentials");
+      } else {
+        toast.success("Login Successful");
+      }
       console.log(response);
       router.push("/");
     } catch (error) {

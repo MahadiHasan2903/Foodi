@@ -3,22 +3,20 @@ import { Minus, Plus, X } from "lucide-react";
 import Image from "next/image";
 import React, { useState } from "react";
 
-const SingleCart = ({ item, quantityChangeHandler, handleRemoveFromCart }) => {
+const SingleCart = ({ item, handleQuantityChange, handleRemoveFromCart }) => {
   const [value, setValue] = useState(item?.quantity);
-
-  const totalPrice = item?.discountPrice * value;
-
+  const totalPrice = item?.originalPrice * value;
   const increment = () => {
     const newValue = value + 1;
     setValue(newValue);
-    quantityChangeHandler(item.id, newValue);
+    handleQuantityChange(item.id, newValue);
   };
 
   const decrement = () => {
     if (value > 1) {
       const newValue = value - 1;
       setValue(newValue);
-      quantityChangeHandler(item.id, newValue);
+      handleQuantityChange(item.id, newValue);
     }
   };
 
@@ -49,11 +47,11 @@ const SingleCart = ({ item, quantityChangeHandler, handleRemoveFromCart }) => {
         />
         <div className="pl-[5px]">
           <h1>{item.name}</h1>
-          <h4 className="font-[400] text-[15px] text-[#00000082]">
+          <h4 className="font-[400] text-[15px] text-primary">
             ${item.originalPrice} * {value}
           </h4>
           <h4 className="font-[600] text-[17px] pt-[3px] text-[#d02222] font-Roboto">
-            BDT{totalPrice}
+            BDT {totalPrice}
           </h4>
         </div>
         <X

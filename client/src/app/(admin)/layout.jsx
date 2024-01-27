@@ -1,5 +1,5 @@
 import Sidebar from "@/lib/components/Admin/Sidebar";
-import ProtectedRoute from "@/lib/config/ProtectedRoute";
+import ProtectedAdminRoute from "@/lib/config/ProtectedAdminRoute";
 import React from "react";
 
 export const metadata = {
@@ -9,7 +9,7 @@ export const metadata = {
 
 const Layout = ({ children }) => {
   return (
-    <ProtectedRoute>
+    <ProtectedAdminRoute>
       <div className="border-t border-t-1 ">
         <div className="flex justify-start w-full h-full md:justify-center ">
           <div className="w-[80px] border-r border-black dark:border-white h-[80vh] md:w-[330px] bg-tertiary dark:bg-secondary/40 py-4 ">
@@ -20,7 +20,7 @@ const Layout = ({ children }) => {
           </div>
         </div>
       </div>
-    </ProtectedRoute>
+    </ProtectedAdminRoute>
   );
 };
 

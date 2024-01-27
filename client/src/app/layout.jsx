@@ -19,8 +19,8 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <CartProvider>
-          <AuthProvider>
+        <AuthProvider>
+          <CartProvider>
             <ThemeProvider attribute="class" defaultTheme="dark">
               <Header />
               {children}
@@ -36,8 +36,8 @@ export default function RootLayout({ children }) {
               />
               <Footer />
             </ThemeProvider>
-          </AuthProvider>
-        </CartProvider>
+          </CartProvider>
+        </AuthProvider>
       </body>
     </html>
   );

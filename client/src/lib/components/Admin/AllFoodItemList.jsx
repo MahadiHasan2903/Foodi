@@ -100,12 +100,12 @@ const AllFoodItemList = ({ allFoodItemList }) => {
                   {foodItem.originalPrice}
                 </td>
                 <td className="px-2 py-4 whitespace-no-wrap border-b border-gray-200 dark:border-gray-700">
-                  <Link href={`/foodItems/${foodItem.id}/update-foodItem`}>
+                  <Link href={`/foodItems/${foodItem.id}`}>
                     <PencilLine size={20} className="text-primary" />
                   </Link>
                 </td>
                 <td className="px-2 py-4 whitespace-no-wrap border-b border-gray-200 dark:border-gray-700">
-                  <Link href={`/foodItems/${foodItem.id}`}>
+                  <Link href={`/menu/${foodItem.id}`}>
                     <Fullscreen size={20} color="#2342A2" />
                   </Link>
                 </td>

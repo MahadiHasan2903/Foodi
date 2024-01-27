@@ -8,6 +8,9 @@ import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { useCart } from "@/lib/context/CartContext";
 import { toast } from "react-toastify";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 const FoodCard = ({ foodItem }) => {
   const {
@@ -22,18 +25,25 @@ const FoodCard = ({ foodItem }) => {
     events,
     image,
   } = foodItem;
+  const router = useRouter();
+  const { data: session } = useSession();
+  const accessToken = session?.accessToken;
 
   const { addToCart, cartItems } = useCart();
   const isItemInCart = cartItems.some((item) => item.id === id);
 
   const handleAddToCart = () => {
-    const quantity = 1;
-
-    if (isItemInCart) {
-      toast.error("Item is already in the cart");
+    if (!accessToken) {
+      router.push("/login");
     } else {
-      addToCart(foodItem, quantity);
-      toast.success("Item added to cart");
+      const quantity = 1;
+
+      if (isItemInCart) {
+        toast.error("Item is already in the cart");
+      } else {
+        addToCart(foodItem, quantity);
+        toast.success("Item added to cart");
+      }
     }
   };
 
@@ -47,23 +57,26 @@ const FoodCard = ({ foodItem }) => {
 
   return (
     <Card className="relative overflow-hidden group bg-[#d7d7d7] dark:bg-[#1d232a]">
-      <CardHeader className="p-0">
-        <div className="w-2/6 ">
-          <Badge className="m-2 mb-3 text-sm font-medium text-center uppercase top-4 left-5">
-            {category}
-          </Badge>
-        </div>
-        <div className="relative w-full h-[260px] flex items-center mt-2 overflow-hidden xl:bg-no-repeat bg-tertiary dark:bg-secondary/40  xl:bg-[110%] justify-center">
-          <Image
-            className="absolute bottom-0 shadow-2xl"
-            src={image.url}
-            width={300}
-            height={250}
-            alt="Project"
-            priortiy="true"
-          />
-        </div>
-      </CardHeader>
+      <Link href={`/menu/${id}`}>
+        <CardHeader className="p-0">
+          <div className="w-2/6 ">
+            <Badge className="m-2 mb-3 text-sm font-medium text-center uppercase top-4 left-5">
+              {category}
+            </Badge>
+          </div>
+          <div className="relative w-full h-[260px] flex items-center mt-2 overflow-hidden xl:bg-no-repeat bg-tertiary dark:bg-secondary/40  xl:bg-[110%] justify-center">
+            <Image
+              className="absolute bottom-0 shadow-2xl"
+              src={image.url}
+              width={300}
+              height={250}
+              alt="Project"
+              priortiy="true"
+            />
+          </div>
+        </CardHeader>
+      </Link>
+
       <div className="h-full px-8 py-6">
         <div className="flex items-center justify-between mb-1">
           <h4 className="h4">{name}</h4>

@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
+import { toast } from "react-toastify";
 
 const Navbar = ({ containerStyles, linkStyles, underlineStyles }) => {
   const path = usePathname();
@@ -16,9 +17,8 @@ const Navbar = ({ containerStyles, linkStyles, underlineStyles }) => {
     { path: "/", name: "Home" },
     { path: "/menu", name: "Menu" },
     { path: "/contact", name: "Contact" },
-    userRole === "admin"
-      ? { path: "/dashboard", name: "Dashboard" }
-      : { path: "/login", name: "Login" },
+    !accessToken && { path: "/login", name: "Login" },
+    userRole === "admin" && { path: "/dashboard", name: "Dashboard" },
   ];
 
   const [isDropdownOpen, setDropdownOpen] = useState(false);
@@ -27,14 +27,21 @@ const Navbar = ({ containerStyles, linkStyles, underlineStyles }) => {
     setDropdownOpen(!isDropdownOpen);
   };
 
-  const handleLogout = () => {
-    // Add logic to handle logout
-    // You might want to call a logout function or redirect the user to the logout page
+  const handleProfileClick = () => {
+    setDropdownOpen(false);
   };
+
+  const handleLogoutClick = (e) => {
+    e.preventDefault();
+    setDropdownOpen(false);
+    signOut({ callbackUrl: "/login" });
+  };
+
+  const filteredLinks = links.filter(Boolean);
 
   return (
     <nav className={`${containerStyles}`}>
-      {links.map((link, index) => (
+      {filteredLinks.map((link, index) => (
         <Link
           key={index}
           href={link.path}
@@ -63,15 +70,15 @@ const Navbar = ({ containerStyles, linkStyles, underlineStyles }) => {
             onClick={handleAvatarClick}
           />
           {isDropdownOpen && (
-            <div className="absolute  left-[-50px] bg-[#d7d7d7] dark:bg-[#1d232a] z-50 px-2 py-2">
+            <div className="absolute left-[-50px] bg-[#d7d7d7] dark:bg-[#1d232a] z-50 px-2 py-2">
               <div className="px-12 py-2 mb-1 text-center rounded-lg bg-primary">
-                <Link href="/profile">Profile</Link>
+                <Link onClick={handleProfileClick} href="/profile">
+                  Profile
+                </Link>
               </div>
               <div
-                className="px-12 py-2 text-center rounded-lg bg-primary"
-                onClick={() => {
-                  signOut({ callbackUrl: "/" });
-                }}
+                className="px-12 py-2 text-center rounded-lg cursor-pointer bg-primary"
+                onClick={handleLogoutClick}
               >
                 Logout
               </div>

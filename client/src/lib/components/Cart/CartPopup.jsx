@@ -8,8 +8,7 @@ import Link from "next/link";
 const CartPopup = ({ onClose }) => {
   const [isPopupOpen, setPopupOpen] = useState(true);
   const { getCartItems, removeFromCart } = useCart();
-  const cartItems = getCartItems();
-  console.log(cartItems);
+  const [cartItems, setCartItems] = useState(getCartItems());
 
   const handleCloseClick = () => {
     setPopupOpen(false);
@@ -18,18 +17,26 @@ const CartPopup = ({ onClose }) => {
 
   const handleRemoveFromCart = (itemId) => {
     removeFromCart(itemId);
+    setCartItems(getCartItems());
   };
 
-  const totalPrice = cartItems.reduce((acc, item) => {
-    return acc + item.originalPrice * item.quantity;
-  }, 0);
+  const handleQuantityChange = (itemId, newQuantity) => {
+    // Update the quantity of the specific item
+    const updatedCartItems = cartItems.map((item) =>
+      item.id === itemId ? { ...item, quantity: newQuantity } : item
+    );
+    setCartItems(updatedCartItems);
+  };
 
-  const quantityChangeHandler = (itemId, newQuantity) => {};
+  const totalPrices = cartItems.map(
+    (item) => item.originalPrice * item.quantity
+  );
+  const totalPrice = totalPrices.reduce((acc, price) => acc + price, 0);
 
   return (
     <>
       {isPopupOpen && (
-        <div className="absolute top-0 right-0 h-[100vh] cartpopup w-[400px] z-[99999]">
+        <div className="absolute top-0 right-0 min-h-[100vh] cartpopup w-[400px] z-[99999]">
           <div
             className="absolute cursor-pointer top-2 right-2"
             onClick={handleCloseClick}
@@ -47,13 +54,13 @@ const CartPopup = ({ onClose }) => {
                   <SingleCart
                     key={index}
                     item={item}
-                    quantityChangeHandler={quantityChangeHandler}
+                    handleQuantityChange={handleQuantityChange}
                     handleRemoveFromCart={handleRemoveFromCart}
                   />
                 ))}
             </div>
           </div>
-          <div className="bottom-0 py-2 mx-4 mt-[200px] text-center rounded-lg bg-primary">
+          <div className="bottom-0 py-2 mx-4 mb-5 mt-[200px] text-center rounded-lg bg-primary">
             <Link href="/checkout">Checkout Now (BDT {totalPrice})</Link>
           </div>
         </div>

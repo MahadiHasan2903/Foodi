@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next//navigation";
 
-const ProtectedRoute = ({ children }) => {
+const ProtectedAdminRoute = ({ children }) => {
   const { data: session, status } = useSession();
   const router = useRouter();
   const userRole = session?.role;
@@ -12,14 +12,14 @@ const ProtectedRoute = ({ children }) => {
   useEffect(() => {
     if (status === "loading") return;
 
-    if (!session || !userRole) {
+    if (!session || !userRole || userRole !== "admin") {
       router.push("/login");
     }
   }, [status, session, userRole, router]);
 
   if (status === "loading") return <div>Loading...</div>;
 
-  return userRole === "user" ? <div>{children}</div> : null;
+  return userRole === "admin" ? <div>{children}</div> : null;
 };
 
-export default ProtectedRoute;
+export default ProtectedAdminRoute;

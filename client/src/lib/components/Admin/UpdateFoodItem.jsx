@@ -9,15 +9,17 @@ import api from "@/lib/api";
 import { useSession } from "next-auth/react";
 import { toast } from "react-toastify";
 import { HashLoader } from "react-spinners";
+import { useRouter } from "next/navigation";
 
-const AddFoodItem = () => {
+const UpdateFoodItem = ({ foodItem }) => {
+  const router = useRouter();
   const { data: session } = useSession();
   const accessToken = session?.accessToken;
-  const [image, setImage] = useState(null);
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [originalPrice, setOriginalPrice] = useState("");
-  const [category, setCategory] = useState("");
+  const [image, setImage] = useState(foodItem.image.url);
+  const [name, setName] = useState(foodItem.name);
+  const [description, setDescription] = useState(foodItem.description);
+  const [originalPrice, setOriginalPrice] = useState(foodItem.originalPrice);
+  const [category, setCategory] = useState(foodItem.category);
   const [loading, setLoading] = useState(false);
 
   const handleFileInputChange = (e) => {
@@ -34,41 +36,50 @@ const AddFoodItem = () => {
     setCategory(e.target.value);
   };
 
-  const handleAddItem = async () => {
-    if (!image || !name || !description || !originalPrice || !category) {
+  const handleUpdateItem = async () => {
+    if (!name || !description || !originalPrice || !category) {
       setLoading(false);
       toast.error("Please fill in all the required fields");
       return;
     }
     setLoading(true);
 
-    const foodItemData = {
-      image,
+    let updatedImage = image; // Assume the image is unchanged unless proven otherwise
+
+    // Check if a new image has been selected
+    if (document.getElementById("file-input").files.length > 0) {
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        if (reader.readyState === 2) {
+          updatedImage = reader.result;
+        }
+      };
+      reader.readAsDataURL(document.getElementById("file-input").files[0]);
+    }
+
+    const updateFoodData = {
       name,
       description,
       originalPrice,
       category,
     };
 
+    // Only include the image in updateFoodData if it has changed
+    if (updatedImage !== foodItem.image.url) {
+      updateFoodData.image = updatedImage;
+    }
+
     try {
-      const response = await api.foodItems.createfoodItem(
+      const response = await api.foodItems.updatefoodItem(
+        foodItem._id,
         accessToken,
-        foodItemData
+        updateFoodData
       );
-      console.log(response);
-      if (!response.newFoodItem) {
-        toast.error(response.message);
-      } else {
-        toast.success(response.message);
-      }
-      setImage(null);
-      setName("");
-      setDescription("");
-      setOriginalPrice("");
-      setCategory("");
+      toast.success(response);
+      router.push("/foodItems");
     } catch (error) {
-      console.error("Error adding food item:", error);
-      toast.error("Failed to add food item");
+      console.error("Error updating food item:", error);
     } finally {
       setLoading(false);
     }
@@ -94,7 +105,7 @@ const AddFoodItem = () => {
               width={500}
               height={500}
               src={image}
-              alt="Secondary Image"
+              alt="image"
               className="object-cover w-full h-full bg-gray-300"
             />
           ) : (
@@ -166,14 +177,14 @@ const AddFoodItem = () => {
         <Button
           className="mt-8 gap-x-2"
           type="submit"
-          onClick={handleAddItem}
+          onClick={handleUpdateItem}
           disabled={loading}
         >
-          {loading ? <HashLoader size={35} /> : <>Add</>}
+          {loading ? <HashLoader size={35} /> : <>Update</>}
         </Button>
       </div>
     </div>
   );
 };
 
-export default AddFoodItem;
+export default UpdateFoodItem;
