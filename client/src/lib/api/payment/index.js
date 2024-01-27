@@ -9,7 +9,7 @@ const getStripeApikey = async () => {
     },
   });
 
-  console.log("Get Stripe API Key:", response);
+  return response;
 };
 
 const paymentProcess = async (paymentData) => {

@@ -71,11 +71,11 @@ const Navbar = ({ containerStyles, linkStyles, underlineStyles }) => {
           />
           {isDropdownOpen && (
             <div className="absolute left-[-50px] bg-[#d7d7d7] dark:bg-[#1d232a] z-50 px-2 py-2">
-              <div className="px-12 py-2 mb-1 text-center rounded-lg bg-primary">
-                <Link onClick={handleProfileClick} href="/profile">
+              <Link onClick={handleProfileClick} href="/profile">
+                <div className="px-12 py-2 mb-1 text-center rounded-lg bg-primary">
                   Profile
-                </Link>
-              </div>
+                </div>
+              </Link>
               <div
                 className="px-12 py-2 text-center rounded-lg cursor-pointer bg-primary"
                 onClick={handleLogoutClick}

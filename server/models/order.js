@@ -25,18 +25,22 @@ const orderSchema = new mongoose.Schema(
       default: "Processing",
     },
     shippingAddress: {
-      street: {
+      house: {
         type: String,
         required: true,
       },
-      city: {
+      road: {
         type: String,
         required: true,
       },
       state: {
         type: String,
+      },
+      city: {
+        type: String,
         required: true,
       },
+
       zipCode: {
         type: String,
         required: true,

@@ -5,7 +5,7 @@ import React, { useState } from "react";
 
 const SingleCart = ({ item, handleQuantityChange, handleRemoveFromCart }) => {
   const [value, setValue] = useState(item?.quantity);
-  const totalPrice = item?.originalPrice * value;
+  const total = item?.originalPrice * value;
   const increment = () => {
     const newValue = value + 1;
     setValue(newValue);
@@ -51,7 +51,7 @@ const SingleCart = ({ item, handleQuantityChange, handleRemoveFromCart }) => {
             ${item.originalPrice} * {value}
           </h4>
           <h4 className="font-[600] text-[17px] pt-[3px] text-[#d02222] font-Roboto">
-            BDT {totalPrice}
+            BDT {total}
           </h4>
         </div>
         <X

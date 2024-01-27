@@ -7,7 +7,7 @@ import Link from "next/link";
 
 const CartPopup = ({ onClose }) => {
   const [isPopupOpen, setPopupOpen] = useState(true);
-  const { getCartItems, removeFromCart } = useCart();
+  const { getCartItems, removeFromCart, addToCart } = useCart();
   const [cartItems, setCartItems] = useState(getCartItems());
 
   const handleCloseClick = () => {
@@ -21,11 +21,19 @@ const CartPopup = ({ onClose }) => {
   };
 
   const handleQuantityChange = (itemId, newQuantity) => {
-    // Update the quantity of the specific item
-    const updatedCartItems = cartItems.map((item) =>
-      item.id === itemId ? { ...item, quantity: newQuantity } : item
-    );
-    setCartItems(updatedCartItems);
+    if (newQuantity > 0) {
+      // Update the quantity of the specific item
+      const updatedCartItems = cartItems.map((item) =>
+        item.id === itemId ? { ...item, quantity: newQuantity } : item
+      );
+      setCartItems(updatedCartItems);
+
+      // Call addToCart from the context with the updated item and new quantity
+      const updatedItem = updatedCartItems.find((item) => item.id === itemId);
+      if (updatedItem) {
+        addToCart(updatedItem, newQuantity);
+      }
+    }
   };
 
   const totalPrices = cartItems.map(
@@ -61,7 +69,7 @@ const CartPopup = ({ onClose }) => {
             </div>
           </div>
           <div className="bottom-0 py-2 mx-4 mb-5 mt-[200px] text-center rounded-lg bg-primary">
-            <Link href="/checkout">Checkout Now (BDT {totalPrice})</Link>
+            <Link href="/order">Checkout Now (BDT {totalPrice})</Link>
           </div>
         </div>
       )}
