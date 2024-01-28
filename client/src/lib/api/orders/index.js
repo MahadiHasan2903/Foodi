@@ -20,7 +20,6 @@ const createOrder = async (token, orderData) => {
 };
 
 const updateOrder = async (id, token, status) => {
-  console.log(status);
   const response = await fetchTyped(`${base_url}/update-order/${id}`, {
     method: "PUT",
     headers: {
