@@ -95,6 +95,7 @@ const getAllOrders = async (token) => {
 const getOrdersData = async (token) => {
   const response = await fetchTyped(`${base_url}/orders-chart`, {
     method: "GET",
+    next: { revalidate: 3600 },
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,

@@ -69,6 +69,7 @@ const getAllUsers = async (token) => {
 const getUsersData = async (token) => {
   const response = await fetchTyped(`${base_url}/users-chart`, {
     method: "GET",
+    next: { revalidate: 3600 },
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,

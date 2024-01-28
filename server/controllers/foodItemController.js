@@ -186,26 +186,24 @@ const getFoodItemsDataForChartController = async (req, res) => {
       },
     ]);
 
-    const xAxis = last12Months.map((item) => ({
-      data: [`${getMonthName(item.month + 1)} ${item.year}`],
-    }));
+    const months = [];
+    const values = [];
 
-    const series = [
-      {
-        data: last12Months.map((item) => {
-          const match = foodItemsData.find(
-            (data) =>
-              data._id.year === item.year && data._id.month === item.month + 1
-          );
-          return match ? match.count : 0;
-        }),
-      },
-    ];
+    last12Months.reverse().forEach((item) => {
+      const monthName = getMonthName(item.month + 1);
+      months.push(`${monthName} ${item.year}`);
+
+      const match = foodItemsData.find(
+        (data) =>
+          data._id.year === item.year && data._id.month === item.month + 1
+      );
+      values.push(match ? match.count : 0);
+    });
 
     res.status(200).json({
       success: true,
       message: "Food items data for chart fetched successfully",
-      data: { xAxis, series },
+      data: { months, values },
     });
   } catch (error) {
     console.error("Error fetching food items data for chart:", error);

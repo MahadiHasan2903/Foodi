@@ -94,6 +94,7 @@ const getAllfoodItems = async () => {
 const getfoodItemsData = async (token) => {
   const response = await fetchTyped(`${base_url}/foodItems-chart`, {
     method: "GET",
+    next: { revalidate: 3600 },
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
