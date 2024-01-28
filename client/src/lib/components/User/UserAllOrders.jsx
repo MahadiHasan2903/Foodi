@@ -16,6 +16,7 @@ const UserAllOrders = ({ allOrders }) => {
   const startIndex = (currentPage - 1) * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
   const currentItems = allOrders.slice(startIndex, endIndex);
+  console.log(currentItems);
 
   return (
     <div className="flex flex-col relative  overflow-scroll  items-center  justify-around w-[95%]  m-5 border px-5 py-10 bg-[#f1f1f1] dark:bg-[#1d232a]">
@@ -85,8 +86,8 @@ const UserAllOrders = ({ allOrders }) => {
                   {order.shippingAddress.country}
                 </td>
 
-                <td className="px-2 py-4 text-center whitespace-no-wrap border-b border-r border-gray-200 dark:border-gray-700">
-                  <Link href={`/orders/${order.id}`}>
+                <td className="flex justify-center px-2 py-5 text-center whitespace-no-wrap border-b border-r border-gray-200 dark:border-gray-700">
+                  <Link href={`/my-orders/${order.id}`}>
                     <Fullscreen size={20} color="#2342A2" />
                   </Link>
                 </td>

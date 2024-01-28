@@ -236,6 +236,7 @@ const getUserOrdersController = async (req, res) => {
 
     // Transform the userOrders array to include only the necessary fields
     const simplifiedOrders = userOrders.map((order) => ({
+      id: order._id,
       shippingAddress: order.shippingAddress,
       totalPrice: order.totalPrice,
       status: order.status,

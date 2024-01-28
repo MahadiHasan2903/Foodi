@@ -15,7 +15,9 @@ const Layout = ({ children }) => {
           <div className="w-[80px] border-r border-black dark:border-white h-[80vh] md:w-[330px] bg-tertiary dark:bg-secondary/40 py-4 ">
             <ProfileSidebar />
           </div>
-          <div className="w-full h-[80vh] p-5  bg-transparent">{children}</div>
+          <div className="w-full h-[80vh] p-5  overflow-y-scroll  bg-transparent">
+            {children}
+          </div>
         </div>
       </div>
     </ProtectedRoute>

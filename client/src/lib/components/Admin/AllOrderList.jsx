@@ -115,7 +115,7 @@ const AllOrderList = ({ allOrders }) => {
                   </Link>
                 </td>
                 <td className="px-2 py-4 whitespace-no-wrap border-b border-gray-200 dark:border-gray-700">
-                  <Link href={`/orders/${order.id}`}>
+                  <Link href={`/my-orders/${order.id}`}>
                     <Fullscreen size={20} color="#2342A2" />
                   </Link>
                 </td>
