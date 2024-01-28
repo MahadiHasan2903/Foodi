@@ -8,7 +8,6 @@ import {
   Trash,
 } from "lucide-react";
 import { useSession } from "next-auth/react";
-import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
@@ -36,7 +35,7 @@ const AllOrderList = ({ allOrders }) => {
   };
 
   return (
-    <div className="flex flex-col relative  items-center  justify-around w-[95%]  m-5 border px-5 py-10 bg-[#f1f1f1] dark:bg-[#1d232a]">
+    <div className="flex flex-col overflow-scroll relative  items-center  justify-around w-[95%]  m-5 border px-5 py-10 bg-[#f1f1f1] dark:bg-[#1d232a]">
       <div className="w-full">
         <table className="min-w-full p-2 ">
           <thead>
@@ -96,13 +95,13 @@ const AllOrderList = ({ allOrders }) => {
                 </td>
 
                 <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200 dark:border-gray-700">
-                  {order.shippingAddress.street}
+                  {order.shippingAddress.house}
+                </td>
+                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200 dark:border-gray-700">
+                  {order.shippingAddress.road}
                 </td>
                 <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200 dark:border-gray-700">
                   {order.shippingAddress.city}
-                </td>
-                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200 dark:border-gray-700">
-                  {order.shippingAddress.state}
                 </td>
                 <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200 dark:border-gray-700">
                   {order.shippingAddress.zipCode}

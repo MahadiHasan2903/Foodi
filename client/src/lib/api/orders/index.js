@@ -133,11 +133,11 @@ const getUserOrder = async (id, token) => {
       Authorization: `Bearer ${token}`,
     },
   });
-  if (!response.data) {
+  if (!response.orders) {
     throw new Error(response.message);
   }
 
-  const userOrders = response.data;
+  const userOrders = response.orders;
   return userOrders;
 };
 

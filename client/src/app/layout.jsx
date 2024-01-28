@@ -7,7 +7,6 @@ import AuthProvider from "@/lib/config/AuthProvider";
 import Header from "@/lib/components/Layout/Header";
 import Footer from "@/lib/components/Layout/Footer";
 import { CartProvider } from "@/lib/context/CartContext";
-// import StripeProvider from "@/lib/config/StripeProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,7 +20,6 @@ export default function RootLayout({ children }) {
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <AuthProvider>
-          {/* <StripeProvider> */}
           <CartProvider>
             <ThemeProvider attribute="class" defaultTheme="dark">
               <Header />
@@ -39,7 +37,6 @@ export default function RootLayout({ children }) {
               <Footer />
             </ThemeProvider>
           </CartProvider>
-          {/* </StripeProvider> */}
         </AuthProvider>
       </body>
     </html>

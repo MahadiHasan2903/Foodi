@@ -94,10 +94,10 @@ const ProfitChart = ({ ordersChartDetails, userChartDetails }) => {
   }, [userChartDetails]);
 
   return (
-    <div className=" w-[95%] md:w-[50%]  items-center flex flex-col h-[80vh] bg-transparent  p-10">
+    <div className="w-[400px] h-[400px] md:w-[600px] lg:w-[700px] md:h-[500px] items-center flex flex-col  bg-transparent p-3  md:p-10">
       <Line options={chartOptions} data={chartData} />
-      <p className="mt-10 text-3xl font-bold">
-        Total Website Engagement and Orders
+      <p className=" mt-3 md:mt-10 text-[20px] font-bold md:text-3xl text-center">
+        Monthly Customer Registrations and Orders Placed
       </p>
     </div>
   );

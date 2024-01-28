@@ -11,7 +11,7 @@ const AdminDashboardPage = async () => {
   const userChartDetails = await api.users.getUsersData(accessToken);
 
   return (
-    <div className="flex flex-col items-center lg:flex-row ">
+    <div className="flex flex-col items-center justify-center lg:flex-row ">
       <FoodItemChart foodItems={foodChartDetails} />
       <ProfitChart
         ordersChartDetails={ordersChartDetails}

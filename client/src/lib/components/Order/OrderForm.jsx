@@ -3,26 +3,20 @@ import React, { useState } from "react";
 import { Button } from "../ui/button";
 import { HashLoader } from "react-spinners";
 import { Input } from "../ui/input";
-import {
-  CardNumberElement,
-  CardCvcElement,
-  CardExpiryElement,
-  useStripe,
-  useElements,
-} from "@stripe/react-stripe-js";
 import { useCart } from "@/lib/context/CartContext";
 import api from "@/lib/api";
 import { useSession } from "next-auth/react";
+import { toast } from "react-toastify";
 
 const OrderForm = () => {
   const { data: session } = useSession();
   const accessToken = session?.accessToken;
-  const stripe = useStripe();
-  const elements = useElements();
-  const { cartItems } = useCart();
+  const userId = session?.id;
+  const { cartItems, clearCart } = useCart();
   const [loading, setLoading] = useState(false);
 
-  const [name, setName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [zipCode, setZipCode] = useState("");
@@ -32,69 +26,76 @@ const OrderForm = () => {
   const [state, setState] = useState("");
   const [country, setCountry] = useState("");
 
-  console.log(cartItems);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const totalPrice = cartItems.reduce((acc, item) => {
-      const itemPrice = item.originalPrice * item.quantity;
-      return acc + itemPrice;
-    }, 0);
 
-    const paymentData = {
-      amount: Math.round(totalPrice * 100),
-    };
+    // Check if any of the required fields are empty
+    const requiredFields = [
+      firstName,
+      lastName,
+      email,
+      phoneNumber,
+      zipCode,
+      house,
+      road,
+      city,
+      state,
+      country,
+    ];
 
-    const client_secret = await api.payment.paymentProcess(paymentData);
-    // console.log("Client Secret:", client_secret);
+    if (requiredFields.some((field) => field.trim() === "")) {
+      toast.error("Please fill in all required fields.");
+      return;
+    }
 
-    if (!stripe || !elements) return;
-    const result = await stripe.confirmCardPayment(client_secret, {
-      payment_method: {
-        card: elements.getElement(CardNumberElement),
-      },
-    });
-    if (result.error) {
-      toast.error(result.error.message);
-    } else {
-      if (result.paymentIntent.status === "succeeded") {
-        const paymentInfo = {
-          id: result.paymentIntent.id,
-          status: result.paymentIntent.status,
-          type: "Credit Card",
-        };
-        const shippingAddress = {
+    setLoading(true);
+
+    console.log(cartItems);
+
+    try {
+      const totalPrice = cartItems.reduce((acc, item) => {
+        const itemPrice = item.originalPrice * item.quantity;
+        return acc + itemPrice;
+      }, 0);
+
+      const orderData = {
+        cart: cartItems.map((item) => ({
+          item: item.id,
+          quantity: item.quantity,
+        })),
+        totalPrice,
+        status: "Processing",
+        shippingAddress: {
           house,
           road,
           state,
           city,
           zipCode,
           country,
-        };
-        const orderData = {
-          cart: cartItems.map((item) => ({
-            item: item.id,
-            quantity: item.quantity,
-          })),
-          totalPrice,
-          status: "Processing",
-          shippingAddress: {
-            house,
-            road,
-            state,
-            city,
-            zipCode,
-            country,
-          },
-          paymentInfo: {
-            id: result.paymentIntent.id,
-            status: result.paymentIntent.status,
-            type: "Credit Card",
-          },
-        };
+        },
+        user: userId,
+      };
+      console.log(orderData);
+      const order = await api.orders.createOrder(accessToken, orderData);
+      toast.success("Order Created Successfully");
 
-        const order = await api.orders.createOrder(accessToken, orderData);
-      }
+      setFirstName("");
+      setLastName("");
+      setEmail("");
+      setPhoneNumber("");
+      setZipCode("");
+      setHouse("");
+      setRoad("");
+      setCity("");
+      setState("");
+      setCountry("");
+      // Clear the cart
+      clearCart();
+    } catch (error) {
+      console.error("Error submitting order:", error);
+      toast.error("An error occurred while creating the order.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -103,19 +104,19 @@ const OrderForm = () => {
       <div className="w-[90%] flex md:flex-row  flex-col items-center justify-between my-0 md:my-2">
         <Input
           type="text"
-          id="name"
-          placeholder="Full Name"
+          id="fname"
+          placeholder="First Name"
           className="mx-5 my-2 md:my-0"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
         />
         <Input
-          type="email"
-          id="email"
-          placeholder="Email"
-          className="mx-5"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          type="text"
+          id="lname"
+          placeholder="Last Name"
+          className="mx-5 my-2 md:my-0"
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
         />
       </div>
 
@@ -128,7 +129,14 @@ const OrderForm = () => {
           value={phoneNumber}
           onChange={(e) => setPhoneNumber(e.target.value)}
         />
-        <Input type="number" id="zip" placeholder="Zip Code" className="mx-5" />
+        <Input
+          type="email"
+          id="email"
+          placeholder="Email"
+          className="mx-5"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
       </div>
       <div className="w-[90%]  flex md:flex-row  flex-col items-center my-0 md:my-2 justify-between">
         <Input
@@ -139,7 +147,14 @@ const OrderForm = () => {
           value={house}
           onChange={(e) => setHouse(e.target.value)}
         />
-        <Input type="text" id="road" placeholder="Road No" className="mx-5" />
+        <Input
+          type="text"
+          id="road"
+          placeholder="Road No"
+          className="mx-5"
+          value={road}
+          onChange={(e) => setRoad(e.target.value)}
+        />
       </div>
 
       <div className="w-[90%] flex md:flex-row  flex-col items-center my-0 md:my-2 justify-between">
@@ -152,96 +167,31 @@ const OrderForm = () => {
           onChange={(e) => setCity(e.target.value)}
         />
         <Input
-          type="text"
-          id="state"
-          placeholder="State (Optional)"
+          type="number"
+          id="zip"
+          placeholder="Zip Code"
           className="mx-5"
-          value={state}
-          onChange={(e) => setState(e.target.value)}
+          value={zipCode}
+          onChange={(e) => setZipCode(e.target.value)}
         />
       </div>
       <div className="w-[90%] flex md:flex-row  flex-col items-center my-0 md:my-2 justify-between">
         <Input
           type="text"
+          id="state"
+          placeholder="State"
+          className="mx-5 my-2 md:my-0"
+          value={state}
+          onChange={(e) => setState(e.target.value)}
+        />
+        <Input
+          type="text"
           id="country"
           placeholder="Country"
-          className="mx-4 my-2 md:my-0"
+          className="mx-5"
           value={country}
           onChange={(e) => setCountry(e.target.value)}
         />
-        <CardCvcElement
-          className=" bg-[#0c0a09] flex-grow-0 w-full mx-5 my-2 md:my-0 relative rounded-[5px] !h-[35px]"
-          placeholder="CVC"
-          options={{
-            style: {
-              base: {
-                fontSize: "19px",
-                lineHeight: 1.5,
-                color: "#444",
-              },
-              empty: {
-                color: "#3a120a",
-                backgroundColor: "transparent",
-                "::placeholder": {
-                  color: "#fff",
-                },
-              },
-            },
-          }}
-        />
-        {/* <label className="block mt-[63px] md:mt-0  absolute left-[21%] md:left-[51.5%]  text-[#a1a1aa]">
-          CVC
-        </label> */}
-      </div>
-
-      <div className="w-[90%] flex md:flex-row  flex-col items-center my-0 md:my-2 justify-between">
-        <CardExpiryElement
-          className=" bg-[#0c0a09] w-full mx-5 my-2 md:my-0 relative rounded-[5px] !h-[35px]"
-          placeholder="Expiry Date"
-          options={{
-            style: {
-              base: {
-                fontSize: "19px",
-                lineHeight: 1.5,
-                color: "#444",
-              },
-              empty: {
-                color: "#3a120a",
-                backgroundColor: "transparent",
-                "::placeholder": {
-                  color: "#fff",
-                },
-              },
-            },
-          }}
-        />
-        {/* <label className="block mt-3 md:mt-0  absolute left-[21%] md:left-[26%]  text-[#a1a1aa]">
-          Expiry Date
-        </label> */}
-
-        <CardNumberElement
-          className=" bg-[#0c0a09] w-full mx-5 my-2 md:my-0 relative rounded-[5px] !h-[35px]"
-          placeholder="Card Number"
-          options={{
-            style: {
-              base: {
-                fontSize: "19px",
-                lineHeight: 1.5,
-                color: "#444",
-              },
-              empty: {
-                color: "#3a120a",
-                backgroundColor: "transparent",
-                "::placeholder": {
-                  color: "#fff",
-                },
-              },
-            },
-          }}
-        />
-        {/* <label className="block mt-3 md:mt-0  absolute left-[21%] md:left-[26%]  text-[#a1a1aa]">
-          Card Number
-        </label> */}
       </div>
 
       <div className="w-[90%] ml-10">

@@ -30,7 +30,7 @@ const AllUsersList = ({ allUsers }) => {
   const endIndex = startIndex + rowsPerPage;
   const currentItems = allUsers.slice(startIndex, endIndex);
   return (
-    <div className="flex flex-col  items-center  justify-around w-[95%] md:w-[80%]  m-5 border px-5 py-10 bg-[#f1f1f1] dark:bg-[#1d232a]">
+    <div className="flex flex-col  overflow-scroll  items-center  justify-around w-[95%] md:w-[80%]  m-5 border px-5 py-10 bg-[#f1f1f1] dark:bg-[#1d232a]">
       <div className="w-full">
         <table className="min-w-full p-2 ">
           <thead>

@@ -228,30 +228,28 @@ const getFoodItemsInOrderController = async (req, res) => {
 //get a  single  user orders
 const getUserOrdersController = async (req, res) => {
   try {
-    const userId = req.params.id.trim();
+    const userId = req.params.id;
 
-    console.log("User Id:", userId);
+    const userOrders = await Order.find({ user: userId })
+      .select("shippingAddress totalPrice status cart")
+      .populate("cart.item", "name");
 
-    // Check if the user exists
-    const userExists = await User.exists({ _id: userId });
-    if (!userExists) {
-      return res.status(404).json({ message: "User not found" });
-    }
+    // Transform the userOrders array to include only the necessary fields
+    const simplifiedOrders = userOrders.map((order) => ({
+      shippingAddress: order.shippingAddress,
+      totalPrice: order.totalPrice,
+      status: order.status,
+      items: order.cart.length,
+    }));
 
-    // Find orders where the user field matches the userId
-    const userOrders = await Order.findOne({ user: userId }).lean().exec();
-    if (!userOrders) {
-      console.error(`No orders found for user ID: ${userId}`);
-      return res.status(404).json({ message: "No orders found for the user" });
-    }
-
-    console.log("User Orders:", userOrders);
-
-    // Send the found orders as a response
-    res.status(200).json({ orders: userOrders });
+    res.status(200).json({
+      success: true,
+      message: "User orders fetched successfully",
+      orders: simplifiedOrders,
+    });
   } catch (error) {
     console.error("Error fetching user orders:", error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
 

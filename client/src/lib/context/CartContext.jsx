@@ -23,22 +23,25 @@ export const CartProvider = ({ children }) => {
     }
   }, [cartItems, loading]);
 
-  const addToCart = (foodItem, quantity) => {
-    if (quantity <= 0) {
-      return;
-    }
+  const addToCart = (item, quantity) => {
+    // Check if the item is already in the cart
+    const existingItemIndex = cartItems.findIndex(
+      (cartItem) => cartItem.id === item.id
+    );
 
-    const existingItem = cartItems.find((item) => item.id === foodItem.id);
-
-    if (existingItem) {
-      const updatedCart = cartItems.map((item) =>
-        item.id === foodItem.id
-          ? { ...item, quantity: item.quantity + quantity }
-          : item
-      );
-      setCartItems(updatedCart);
+    if (existingItemIndex !== -1) {
+      // Update the existing item with the new quantity
+      setCartItems((prevItems) => {
+        const updatedItems = [...prevItems];
+        updatedItems[existingItemIndex] = {
+          ...updatedItems[existingItemIndex],
+          quantity: quantity,
+        };
+        return updatedItems;
+      });
     } else {
-      setCartItems([...cartItems, { ...foodItem, quantity }]);
+      // Add the new item to the cart
+      setCartItems((prevItems) => [...prevItems, { ...item, quantity }]);
     }
   };
 
