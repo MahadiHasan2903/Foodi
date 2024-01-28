@@ -62,10 +62,6 @@ orderRouter.get(
   getFoodItemsInOrderController
 );
 
-orderRouter.get(
-  "/user-order/:id",
-  isAuthenticated,
-  getFoodItemsInOrderController
-);
+orderRouter.get("/user-order/:id", isAuthenticated, getUserOrdersController);
 
 module.exports = orderRouter;

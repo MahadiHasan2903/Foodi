@@ -2,6 +2,7 @@ const Order = require("../models/order");
 const FoodItem = require("../models/foodItem");
 const User = require("../models/user");
 const { getMonthName } = require("../utils/getMonthName");
+const mongoose = require("mongoose");
 
 const createOrderController = async (req, res) => {
   try {
@@ -24,7 +25,6 @@ const createOrderController = async (req, res) => {
 const updateOrderController = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id);
-    console.log(order);
     if (!order) {
       return res.status(404).json({
         status: "fail",
@@ -103,7 +103,11 @@ const getSingleOrderController = async (req, res) => {
 
 const getAllOrdersController = async (req, res) => {
   try {
-    const orders = await Order.find().sort({ createdAt: -1 });
+    const orders = await Order.find().sort({ createdAt: -1 }).populate({
+      path: "user",
+      select: "name email phoneNumber",
+    });
+
     res.status(200).json({
       status: "success",
       message: "Get orders successfully",
@@ -183,11 +187,10 @@ const getOrdersDataForChartController = async (req, res) => {
   }
 };
 
+//Get food items from a order
 const getFoodItemsInOrderController = async (req, res) => {
   try {
     const orderId = req.params.id;
-
-    // Find the order by ID
     const order = await Order.findById(orderId);
 
     if (!order) {
@@ -197,18 +200,11 @@ const getFoodItemsInOrderController = async (req, res) => {
       });
     }
 
-    // Extract food item IDs and quantities from the order's cart
-    const foodItemsInCart = order.cart.map((cartItem) => ({
-      itemId: cartItem.item,
-      quantity: cartItem.quantity,
-    }));
-
-    // Retrieve the food items with details
-    const foodItemsDetails = await Promise.all(
-      foodItemsInCart.map(async (cartItem) => {
-        const foodItem = await FoodItem.findById(cartItem.itemId);
+    const foodItemsInOrder = await Promise.all(
+      order.cart.map(async (cartItem) => {
+        const foodItem = await FoodItem.findById(cartItem.item);
         return {
-          itemDetails: foodItem,
+          foodItem,
           quantity: cartItem.quantity,
         };
       })
@@ -217,7 +213,7 @@ const getFoodItemsInOrderController = async (req, res) => {
     res.status(200).json({
       status: "success",
       message: "Get food items in order successfully",
-      data: foodItemsDetails,
+      data: foodItemsInOrder,
     });
   } catch (error) {
     console.log(error);
@@ -229,40 +225,33 @@ const getFoodItemsInOrderController = async (req, res) => {
   }
 };
 
+//get a  single  user orders
 const getUserOrdersController = async (req, res) => {
   try {
-    const userId = req.params.userId;
+    const userId = req.params.id.trim();
 
-    // Find the user by ID
-    const user = await User.findById(userId).populate("orders");
+    console.log("User Id:", userId);
 
-    if (!user) {
-      return res.status(404).json({
-        status: "fail",
-        message: "User not found",
-      });
+    // Check if the user exists
+    const userExists = await User.exists({ _id: userId });
+    if (!userExists) {
+      return res.status(404).json({ message: "User not found" });
     }
 
-    // Extract order details from the user's orders
-    const userOrders = user.orders.map((order) => ({
-      orderId: order._id,
-      totalPrice: order.totalPrice,
-      status: order.status,
-      shippingAddress: order.shippingAddress,
-    }));
+    // Find orders where the user field matches the userId
+    const userOrders = await Order.findOne({ user: userId }).lean().exec();
+    if (!userOrders) {
+      console.error(`No orders found for user ID: ${userId}`);
+      return res.status(404).json({ message: "No orders found for the user" });
+    }
 
-    res.status(200).json({
-      status: "success",
-      message: "Get user orders successfully",
-      data: userOrders,
-    });
+    console.log("User Orders:", userOrders);
+
+    // Send the found orders as a response
+    res.status(200).json({ orders: userOrders });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      status: "error",
-      message: "Internal server error",
-      error: error.message,
-    });
+    console.error("Error fetching user orders:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 

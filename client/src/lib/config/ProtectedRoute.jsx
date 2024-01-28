@@ -8,18 +8,19 @@ const ProtectedRoute = ({ children }) => {
   const { data: session, status } = useSession();
   const router = useRouter();
   const userRole = session?.role;
+  const accessToken = session?.accessToken;
 
   useEffect(() => {
     if (status === "loading") return;
 
-    if (!session || !userRole) {
+    if (!session || !accessToken) {
       router.push("/login");
     }
-  }, [status, session, userRole, router]);
+  }, [status, session, accessToken, router]);
 
   if (status === "loading") return <div>Loading...</div>;
 
-  return userRole === "user" ? <div>{children}</div> : null;
+  return accessToken && <div>{children}</div>;
 };
 
 export default ProtectedRoute;

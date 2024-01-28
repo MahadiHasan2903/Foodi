@@ -4,6 +4,8 @@ import {
   ListChecks,
   SquarePen,
   Users,
+  User,
+  KeyRound,
 } from "lucide-react";
 
 export const reviewsData = [
@@ -83,5 +85,27 @@ export const sidebarItems = [
     title: "Add Food Item",
     path: "/add-foodItem",
     icon: <SquarePen size={20} />,
+  },
+];
+
+export const profileSidebarItems = [
+  {
+    id: 1,
+    title: "Profile",
+    path: "/profile",
+    icon: <User size={20} />,
+  },
+  {
+    id: 2,
+    title: "Change Password",
+    path: "/change-password",
+    icon: <KeyRound size={20} />,
+  },
+
+  {
+    id: 4,
+    title: "All Orders",
+    path: "/my-orders",
+    icon: <PackagePlus size={20} />,
   },
 ];

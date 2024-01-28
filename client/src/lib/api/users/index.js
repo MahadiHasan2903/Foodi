@@ -36,11 +36,11 @@ const getSingleUser = async (id, token) => {
   });
 
   const user = {
-    id: response.user.id,
+    id: response.user._id,
     email: response.user.email,
     name: response.user.name,
     role: response.user.role,
-    orders: response.orders,
+    avatar: response.user.avatar.url,
   };
 
   return user;
@@ -80,13 +80,14 @@ const getUsersData = async (token) => {
   return response.data;
 };
 
-const changePassword = async (id, token) => {
+const changePassword = async (id, token, oldPassword, newPassword) => {
   const response = await fetchTyped(`${base_url}/change-password/${id}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
+    body: JSON.stringify({ oldPassword, newPassword }),
   });
 
   return response.message;

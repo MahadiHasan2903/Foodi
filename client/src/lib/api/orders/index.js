@@ -19,14 +19,15 @@ const createOrder = async (token, orderData) => {
   return orderDetails;
 };
 
-const updateOrder = async (id, token, updatedData) => {
+const updateOrder = async (id, token, status) => {
+  console.log(status);
   const response = await fetchTyped(`${base_url}/update-order/${id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(updatedData),
+    body: JSON.stringify({ status }),
   });
 
   if (!response.data) {
@@ -84,6 +85,7 @@ const getAllOrders = async (token) => {
     shippingAddress: order.shippingAddress,
     paymentInfo: order.paymentInfo,
     cart: order.cart,
+    user: order.user,
     totalPrice: order.totalPrice,
     status: order.status,
     paidAt: order.paidAt,

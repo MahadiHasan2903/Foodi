@@ -7,7 +7,7 @@ const AllFoodItems = ({ foodItems }) => {
   // Initialize categories directly without useEffect
   const categories = [
     "All Items",
-    ...new Set(foodItems.map((item) => item.category)),
+    ...new Set(foodItems?.map((item) => item.category)),
   ];
 
   const [category, setCategory] = useState("All Items");

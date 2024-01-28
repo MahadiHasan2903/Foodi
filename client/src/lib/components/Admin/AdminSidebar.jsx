@@ -2,8 +2,6 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LogOut } from "lucide-react";
-import { signOut } from "next-auth/react";
 import { sidebarItems } from "../utils/data";
 
 const Sidebar = () => {
@@ -12,7 +10,6 @@ const Sidebar = () => {
   const pathname = usePathname();
 
   useEffect(() => {
-    // Update activeItem when pathname changes
     const active = sidebarItems.find((item) => item.path === pathname);
     if (active) {
       setActiveItem(active.id);

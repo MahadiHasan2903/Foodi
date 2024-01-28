@@ -18,6 +18,13 @@ const AllOrderList = ({ allOrders }) => {
   const accessToken = session?.accessToken;
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const totalPages = Math.ceil(allOrders.length / rowsPerPage);
+  const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+  const startIndex = (currentPage - 1) * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
+  const currentItems = allOrders.slice(startIndex, endIndex);
 
   const handleDelete = async (id) => {
     try {
@@ -28,24 +35,22 @@ const AllOrderList = ({ allOrders }) => {
     }
   };
 
-  const totalPages = Math.ceil(allOrders.length / rowsPerPage);
-
-  const paginate = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
-
-  const startIndex = (currentPage - 1) * rowsPerPage;
-  const endIndex = startIndex + rowsPerPage;
-  const currentItems = allOrders.slice(startIndex, endIndex);
   return (
-    <div className="flex flex-col  items-center  justify-around w-[95%] md:w-[80%]  m-5 border px-5 py-10 bg-[#f1f1f1] dark:bg-[#1d232a]">
+    <div className="flex flex-col relative  items-center  justify-around w-[95%]  m-5 border px-5 py-10 bg-[#f1f1f1] dark:bg-[#1d232a]">
       <div className="w-full">
         <table className="min-w-full p-2 ">
           <thead>
             <tr className="w-full bg-primary">
-              <th className="px-6 py-3 text-[14px] font-bold leading-4  text-left uppercase ">
+              <th className="px-6  py-3 text-[14px] font-bold leading-4  text-left uppercase ">
                 ID
               </th>
+              <th
+                colSpan={3}
+                className="px-6 py-3 text-center text-[14px] font-bold leading-4   uppercase "
+              >
+                Customer Info
+              </th>
+
               <th className="px-6 py-3 text-[14px] font-bold leading-4  text-left uppercase ">
                 Total Price
               </th>
@@ -70,14 +75,23 @@ const AllOrderList = ({ allOrders }) => {
           <tbody>
             {currentItems.map((order, index) => (
               <tr key={order.id}>
-                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200 dark:border-gray-700">
+                <td className="px-6 py-4 whitespace-no-wrap border-b border-r border-gray-200 dark:border-gray-700">
                   {(currentPage - 1) * rowsPerPage + index + 1}
                 </td>
                 <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200 dark:border-gray-700">
+                  {order.user.name}
+                </td>
+                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200 dark:border-gray-700">
+                  {order.user.email}
+                </td>
+                <td className="px-6 py-4 whitespace-no-wrap border-b border-r border-gray-200 dark:border-gray-700">
+                  {order.user.phoneNumber}
+                </td>
+                <td className="px-6 py-4 whitespace-no-wrap border-b border-r border-gray-200 dark:border-gray-700">
                   {order.totalPrice}
                 </td>
 
-                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200 dark:border-gray-700">
+                <td className="px-6 py-4 whitespace-no-wrap border-b border-r border-gray-200 dark:border-gray-700">
                   {order.status}
                 </td>
 
@@ -93,12 +107,12 @@ const AllOrderList = ({ allOrders }) => {
                 <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200 dark:border-gray-700">
                   {order.shippingAddress.zipCode}
                 </td>
-                <td className="px-6 py-4 text-center whitespace-no-wrap border-b border-gray-200 dark:border-gray-700">
+                <td className="px-6 py-4 text-center whitespace-no-wrap border-b border-r border-gray-200 dark:border-gray-700">
                   {order.shippingAddress.country}
                 </td>
                 <td className="px-2 py-4 whitespace-no-wrap border-b border-gray-200 dark:border-gray-700">
                   <Link href={`/orders/${order.id}/update-order`}>
-                    <PencilLine size={20} className="text-primary" />
+                    <PencilLine size={20} color="green" />
                   </Link>
                 </td>
                 <td className="px-2 py-4 whitespace-no-wrap border-b border-gray-200 dark:border-gray-700">
