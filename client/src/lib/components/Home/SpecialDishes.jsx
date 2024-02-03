@@ -1,36 +1,15 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { getServerSessionData } from "@/lib/config/auth";
+import React, { useState } from "react";
 import { AiOutlineArrowRight } from "react-icons/ai";
 import Link from "next/link";
 import { Button } from "../ui/button";
-import api from "@/lib/api";
 import FoodCard from "../Menu/FoodCard";
 
-const SpecialDishes = () => {
-  const [mostSoldItems, setMostSoldItems] = useState([]);
-
-  useEffect(() => {
-    const fetchMostSoldItems = async () => {
-      try {
-        const foodItems = await api.foodItems.getAllfoodItems();
-
-        // Sort foodItems based on the 'sold' property in descending order
-        const sortedFoodItems = foodItems.sort(
-          (a, b) => parseInt(b.sold) - parseInt(a.sold)
-        );
-
-        // Take the top 3 food items
-        const top3Items = sortedFoodItems.slice(0, 3);
-
-        setMostSoldItems(top3Items);
-      } catch (error) {
-        console.error("Error fetching food items:", error);
-      }
-    };
-
-    fetchMostSoldItems();
-  }, []);
+const SpecialDishes = ({ foodItems }) => {
+  const sortedFoodItems = foodItems.sort(
+    (a, b) => parseInt(b.sold) - parseInt(a.sold)
+  );
+  const mostSoldItems = sortedFoodItems.slice(0, 3);
 
   return (
     <section className="mt-[100px] mb-12 xl:mb-32">

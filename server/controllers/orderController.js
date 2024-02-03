@@ -2,11 +2,26 @@ const Order = require("../models/order");
 const FoodItem = require("../models/foodItem");
 const User = require("../models/user");
 const { getMonthName } = require("../utils/getMonthName");
-const mongoose = require("mongoose");
 
 const createOrderController = async (req, res) => {
   try {
     const newOrder = await Order.create(req.body);
+
+    // Update the sold property of each ordered FoodItem using map
+    const updatePromises = newOrder.cart.map(async (item) => {
+      const foodItemId = item.item;
+
+      // Find the FoodItem and update the sold property
+      await FoodItem.findByIdAndUpdate(
+        foodItemId,
+        { $inc: { sold: item.quantity } }, // Increment sold by the ordered quantity
+        { new: true }
+      );
+    });
+
+    // Wait for all updatePromises to resolve before sending the response
+    await Promise.all(updatePromises);
+
     res.status(201).json({
       status: "success",
       message: "Order created successfully",

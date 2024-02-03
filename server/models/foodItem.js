@@ -4,12 +4,12 @@ const foodItemSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     originalPrice: { type: Number, required: true },
-    discoutnPrice: { type: Number },
+    discountPrice: { type: Number },
     image: {
       public_id: { type: String },
       url: { type: String },
     },
-    sold: { type: String, default: 0 },
+    sold: { type: Number, default: 0 },
     category: { type: String, required: true },
     description: { type: String, required: true },
     ratings: [

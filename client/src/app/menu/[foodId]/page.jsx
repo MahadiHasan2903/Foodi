@@ -48,7 +48,7 @@ const FoodItemDetailsPage = async ({ params }) => {
           </div>
 
           <FoodDetails foodItem={foodItemDetails} />
-          <div className="1500px:w-[55%] 1100px:w-[78%] w-[90%] flex items-center">
+          {/* <div className="1500px:w-[55%] 1100px:w-[78%] w-[90%] flex items-center">
             <Image
               src={client1}
               alt="client1"
@@ -78,7 +78,7 @@ const FoodItemDetailsPage = async ({ params }) => {
                 <span className="text-[#807E7E]">(2.3k Reviews)</span>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

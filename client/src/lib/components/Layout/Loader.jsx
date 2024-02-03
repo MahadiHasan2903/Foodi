@@ -1,13 +1,11 @@
+"use client";
 import React from "react";
-import { HashLoader } from "react-spinners";
-
+import Lottie from "lottie-react";
+import animationData from "../../../../public/loader.json";
 const Loader = () => {
   return (
-    <div className="flex items-center justify-center w-full h-full">
-      <HashLoader
-        color="#ff0000"
-        className="text-primary w-[300px] h-[300pc]"
-      />
+    <div className="flex items-center justify-center w-full h-[80vh]">
+      <Lottie animationData={animationData} width={300} height={300} />
     </div>
   );
 };

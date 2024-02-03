@@ -3,6 +3,8 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { profileSidebarItems } from "../utils/data";
+import { LogOut } from "lucide-react";
+import { signOut } from "next-auth/react";
 
 const ProfileSidebar = () => {
   const [selectedItem, setSelectedItem] = useState(null);
@@ -22,6 +24,11 @@ const ProfileSidebar = () => {
   const handleItemActivation = (itemId) => {
     setActiveItem(itemId);
     handleItemHover(itemId);
+  };
+
+  const handleLogoutClick = (e) => {
+    e.preventDefault();
+    signOut({ callbackUrl: "/login" });
   };
 
   return (
@@ -50,6 +57,15 @@ const ProfileSidebar = () => {
           </Link>
         );
       })}
+      <p
+        className="flex items-center my-4 text-[20px] px-2 py-1 rounded-lg border-none md:border-b hover:bg-primary hover:text-white cursor-pointer"
+        onClick={handleLogoutClick}
+      >
+        <span>
+          <LogOut />
+        </span>
+        <span className="hidden ml-2 md:block">Logout</span>
+      </p>
     </div>
   );
 };

@@ -1,7 +1,6 @@
 import React from "react";
 import api from "@/lib/api";
 import { getServerSessionData } from "@/lib/config/auth";
-import OrderDetails from "@/lib/components/Admin/OrderDetails";
 import Image from "next/image";
 
 const OrderDetailsPage = async ({ params }) => {

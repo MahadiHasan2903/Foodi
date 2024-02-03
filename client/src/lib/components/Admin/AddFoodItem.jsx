@@ -106,7 +106,7 @@ const AddFoodItem = () => {
               className="object-cover bg-gray-300"
             />
           )}
-          <div className="absolute rounded-full cursor-pointer right-[40%] bottom-5">
+          <div className="absolute rounded-full cursor-pointer right-[25%] md:right-[30%] xl:right-[38%] bottom-5">
             <label htmlFor="file-input">
               <Camera size={20} className="cursor-pointer text-cyan-500" />
             </label>

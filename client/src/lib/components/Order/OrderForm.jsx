@@ -29,7 +29,6 @@ const OrderForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Check if any of the required fields are empty
     const requiredFields = [
       firstName,
       lastName,
@@ -60,8 +59,8 @@ const OrderForm = () => {
 
       const orderData = {
         cart: cartItems.map((item) => ({
-          item: item.id,
-          quantity: item.quantity,
+          item: item?._id,
+          quantity: item?.quantity || 0,
         })),
         totalPrice,
         status: "Processing",
@@ -75,6 +74,7 @@ const OrderForm = () => {
         },
         user: userId,
       };
+
       console.log(orderData);
       const order = await api.orders.createOrder(accessToken, orderData);
       toast.success("Order Created Successfully");
@@ -89,7 +89,7 @@ const OrderForm = () => {
       setCity("");
       setState("");
       setCountry("");
-      // Clear the cart
+
       clearCart();
     } catch (error) {
       console.error("Error submitting order:", error);
